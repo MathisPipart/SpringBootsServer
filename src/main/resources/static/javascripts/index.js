@@ -12,44 +12,74 @@ function init(){
     document.getElementById('xForm').style.display='block';
 }
 /**
- * it sends an Ajax query using axios
- * @param url the url to send to
- * @param data the data to send (e.g. a Javascript structure)
+ * It sends an Ajax query using Axios
+ * @param {string} url - The URL to send the request to
+ * @param {Object} data - The data to send as query parameters
  */
 function sendAxiosQuery(url, data) {
-    axios.post(url , data)
-        .then (function (dataR) {
-            document.getElementById('results').innerHTML= "The result is: "+JSON.stringify(dataR.data);
-            document.getElementById('results').style.display='block';
-            document.getElementById('xForm').style.display='none';
+    const params = new URLSearchParams(data).toString();
+
+    axios.get(`${url}?${params}`)
+        .then(function (dataR) {
+            const results = dataR.data;
+            let output = "Movies found: <br>";
+            results.forEach(movie => {
+                output += `
+                    ID: ${movie.id}<br>
+                    Name: ${movie.name}<br>
+                    Date: ${movie.date}<br>
+                    Tagline: ${movie.tagline}<br>
+                    Description: ${movie.description}<br>
+                    Minute: ${movie.minute}<br>
+                    Rating: ${movie.rating}<br>
+                    <br>
+                `;
+            });
+            document.getElementById('results').innerHTML = output;
+            document.getElementById('results').style.display = 'block';
+            document.getElementById('xForm').style.display = 'block';
         })
-        .catch( function (response) {
-            alert (JSON.stringify(response));
-        })
+        .catch(function (error) {
+            if (error.response && error.response.status === 404) {
+                alert("No movies found.");
+            } else {
+                alert("An error occurred: " + error.message);
+            }
+        });
+}
+
+
+
+/**
+ * Called when the submit button is pressed
+ * @param {Event} event - The submission event
+ */
+function onSubmit(event) {
+    onSubmitAux(event, '/movies/findByKeyword'); // Envoie les données pour chercher un film
 }
 
 /**
- * called when the submit button is pressed
- * @param event the submission event
+ * Called when another query is triggered (do not modify this function)
+ * @param {Event} event - The submission event
  */
-function onSubmit(event) {
-    onSubmitAux(event, '/characters/insert')
-}
-
 function onSubmitQuery(event) {
-    onSubmitAux(event, '/query')
+    onSubmitAux(event, '/query'); // Envoie les données pour une autre action
 }
 
-function onSubmitAux(event, url){
-    // The .serializeArray() method creates a JavaScript array of objects
-    // https://api.jquery.com/serializearray/
-    const formArray= $("form").serializeArray();
-    const data={};
-    for (let index in formArray){
-        data[formArray[index].name]= formArray[index].value;
-    }
-    // const data = JSON.stringify($(this).serializeArray());
-    sendAxiosQuery(url, data);
-    // prevent the form from reloading the page (normal behaviour for forms)
-    event.preventDefault()
+/**
+ * Helper function to process form data and send an AJAX query
+ * @param {Event} event - The form submission event
+ * @param {string} url - The URL to send the request to
+ */
+function onSubmitAux(event, url) {
+    // Sérialise les données du formulaire en un objet JavaScript
+    const formArray = $("#xForm").serializeArray(); // Récupère les données du formulaire spécifique
+    const data = {};
+    formArray.forEach(field => {
+        data[field.name] = field.value; // Convertit les données du formulaire en objet clé-valeur
+    });
+
+    sendAxiosQuery(url, data); // Envoi de la requête via Axios
+
+    event.preventDefault(); // Empêche le rechargement de la page
 }

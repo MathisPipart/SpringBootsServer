@@ -414,35 +414,61 @@ function searchMovieWithActors(name) {
                 return;
             }
 
-            // Extraire les informations du film depuis la première ligne
-            const movieInfo = `
-                <h3>${data[0][1]} (${data[0][2]})</h3>
-                <p><strong>Tagline:</strong> ${data[0][6]}</p>
-                <p><strong>Description:</strong> ${data[0][3]}</p>
-                <p><strong>Duration:</strong> ${data[0][4]} minutes</p>
-                <p><strong>Rating:</strong> ${data[0][5]}</p>
-            `;
+            // Grouper les résultats par film (par movie_id)
+            const movies = {};
+            data.forEach(row => {
+                const movieId = row[0]; // movie_id
+                if (!movies[movieId]) {
+                    movies[movieId] = {
+                        id: movieId,
+                        name: row[1],
+                        date: row[2],
+                        description: row[3],
+                        duration: row[4],
+                        rating: row[5],
+                        tagline: row[6],
+                        actors: [],
+                    };
+                }
+                if (row[7]) {
+                    // Ajouter l'acteur à la liste des acteurs pour ce film
+                    movies[movieId].actors.push({
+                        name: row[7],
+                        role: row[8],
+                    });
+                }
+            });
 
-            // Lister les acteurs
-            const actorList = data
-                .filter(row => row[7] !== null) // Exclure les lignes sans acteur
-                .map(row => `<li>${row[7]} as ${row[8]}</li>`)
+            // Construire le HTML pour afficher les films et leurs acteurs
+            const resultsHTML = Object.values(movies)
+                .map(movie => {
+                    const actorList = movie.actors
+                        .map(actor => `<li>${actor.name} as ${actor.role}</li>`)
+                        .join("");
+
+                    return `
+                        <div>
+                            <h3>${movie.name} (${movie.date})</h3>
+                            <p><strong>Tagline:</strong> ${movie.tagline}</p>
+                            <p><strong>Description:</strong> ${movie.description}</p>
+                            <p><strong>Duration:</strong> ${movie.duration} minutes</p>
+                            <p><strong>Rating:</strong> ${movie.rating}</p>
+                            <h4>Actors:</h4>
+                            <ul>
+                                ${actorList || "<li>No actors found.</li>"}
+                            </ul>
+                        </div>
+                    `;
+                })
                 .join("");
 
-            const fullInfo = `
-                ${movieInfo}
-                <h4>Actors:</h4>
-                <ul>
-                    ${actorList || "<li>No actors found.</li>"}
-                </ul>
-            `;
-
-            document.getElementById("results").innerHTML = fullInfo;
+            document.getElementById("results").innerHTML = resultsHTML;
         })
         .catch(error => {
             console.error("Erreur :", error);
             document.getElementById("results").textContent = "Erreur lors de la recherche du film.";
         });
 }
+
 
 

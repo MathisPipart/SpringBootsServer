@@ -35,13 +35,6 @@ public class ActorController {
         }
     }
 
-    /**@GetMapping("/findByName")
-    public ResponseEntity<it.unito.iumtweb.springboot.actor.Actor> findActorByName(@RequestParam String name) {
-        System.out.println("IN findActorByName");
-        List<Actor> actor = actorService.findActorByName(name);
-        return actor.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
-                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
-    }**/
     @GetMapping("/findByName")
     public ResponseEntity<List<Actor>> findActorByName(@RequestParam String name) {
         List<Actor> actors = actorService.findActorByName(name);

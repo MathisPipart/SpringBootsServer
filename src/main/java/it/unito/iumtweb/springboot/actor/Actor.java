@@ -1,5 +1,6 @@
 package it.unito.iumtweb.springboot.actor;
 
+import it.unito.iumtweb.springboot.movie.Movie;
 import jakarta.persistence.*;
 
 @Entity
@@ -15,6 +16,10 @@ public class Actor {
 
     @Column // chaque acteur a un rôle
     private String role;
+
+    @ManyToOne
+    @JoinColumn(name = "movie_id")
+    private Movie movie;
 
     /**
      * No-argument constructor this is necessary otherwise many methods will not work
@@ -56,5 +61,14 @@ public class Actor {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+
+    public Movie getMovie() {
+        return movie;
+    }
+
+    public void setMovie(Movie movie) {
+        this.movie = movie;
     }
 }

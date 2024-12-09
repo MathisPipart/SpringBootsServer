@@ -52,4 +52,14 @@ public class MovieController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
+    @GetMapping("/findByNameMovieAndActors")
+    public ResponseEntity<?> findByNameMovieAndActors(@RequestParam String name) {
+        List<Object[]> results = movieService.findMovieWithActors(name);
+
+        if (results.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Film non trouvé.");
+        }
+        return ResponseEntity.ok(results);
+    }
 }

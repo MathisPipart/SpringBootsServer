@@ -1,6 +1,10 @@
 package it.unito.iumtweb.springboot.movie;
 
+import it.unito.iumtweb.springboot.actor.Actor;
 import jakarta.persistence.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table
@@ -27,6 +31,9 @@ public class Movie {
 
     @Column(nullable = true) // "rating" peut être nul avec précision 3, scale 2
     private Double rating;
+
+    @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Actor> actors = new ArrayList<>();
 
     /**
      * No-argument constructor this is necessary otherwise many methods will not work
@@ -104,6 +111,14 @@ public class Movie {
 
     public void setRating(Double rating) {
         this.rating = rating;
+    }
+
+    public List<Actor> getActors() {
+        return actors;
+    }
+
+    public void setActors(List<Actor> actors) {
+        this.actors = actors;
     }
 
 }

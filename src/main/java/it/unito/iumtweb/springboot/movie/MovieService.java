@@ -32,6 +32,10 @@ public class MovieService {
     }
 
     public List<Movie> findMoviesByKeyword(String keyword) {
-        return movieRepository.findByNameContainingIgnoreCase(keyword);
+        return movieRepository.findMoviesByNameKeyword(keyword);
+    }
+
+    public List<Object[]> findMovieWithActors(String movieName) {
+        return movieRepository.findMovieWithActorsByName(movieName);
     }
 }

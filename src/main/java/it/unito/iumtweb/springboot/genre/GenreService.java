@@ -8,31 +8,31 @@ import java.util.Optional;
 
 @Service
 public class GenreService {
-    private final GenreRepository actorRepository;
+    private final GenreRepository genreRepository;
 
     @Autowired
-    public GenreService(GenreRepository actorRepository) {
-        this.actorRepository = actorRepository;
+    public GenreService(GenreRepository genreRepository) {
+        this.genreRepository = genreRepository;
     }
     
     public Genre saveGenre(Genre genre) {
-        return actorRepository.save(genre);
+        return genreRepository.save(genre);
     }
 
     public void deleteGenreById(Long id) {
-        actorRepository.deleteById(id);
+        genreRepository.deleteById(id);
     }
 
     public Optional<Genre> findGenreById(Long id) {
-        return actorRepository.findById(id);
+        return genreRepository.findById(id);
     }
 
     public List<Genre> findGenreByName(String name) {
-        return actorRepository.findByName(name.trim());
+        return genreRepository.findByName(name.trim());
     }
 
     public List<Genre> findGenresByKeyword(String keyword) {
-        return actorRepository.findByNameContainingIgnoreCase(keyword.trim());
+        return genreRepository.findByNameContainingIgnoreCase(keyword.trim());
     }
 
 }

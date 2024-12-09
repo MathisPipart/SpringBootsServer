@@ -8,31 +8,31 @@ import java.util.Optional;
 
 @Service
 public class CountryService {
-    private final CountryRepository actorRepository;
+    private final CountryRepository countryRepository;
 
     @Autowired
-    public CountryService(CountryRepository actorRepository) {
-        this.actorRepository = actorRepository;
+    public CountryService(CountryRepository countryRepository) {
+        this.countryRepository = countryRepository;
     }
     
     public Country saveCountry(Country country) {
-        return actorRepository.save(country);
+        return countryRepository.save(country);
     }
 
     public void deleteCountryById(Long id) {
-        actorRepository.deleteById(id);
+        countryRepository.deleteById(id);
     }
 
     public Optional<Country> findCountryById(Long id) {
-        return actorRepository.findById(id);
+        return countryRepository.findById(id);
     }
 
     public List<Country> findCountryByName(String name) {
-        return actorRepository.findByName(name.trim());
+        return countryRepository.findByName(name.trim());
     }
 
     public List<Country> findCountrysByKeyword(String keyword) {
-        return actorRepository.findByNameContainingIgnoreCase(keyword.trim());
+        return countryRepository.findByNameContainingIgnoreCase(keyword.trim());
     }
 
 }

@@ -8,31 +8,31 @@ import java.util.Optional;
 
 @Service
 public class CrewService {
-    private final CrewRepository actorRepository;
+    private final CrewRepository crewRepository;
 
     @Autowired
-    public CrewService(CrewRepository actorRepository) {
-        this.actorRepository = actorRepository;
+    public CrewService(CrewRepository crewRepository) {
+        this.crewRepository = crewRepository;
     }
     
     public Crew saveCrew(Crew crew) {
-        return actorRepository.save(crew);
+        return crewRepository.save(crew);
     }
 
     public void deleteCrewById(Long id) {
-        actorRepository.deleteById(id);
+        crewRepository.deleteById(id);
     }
 
     public Optional<Crew> findCrewById(Long id) {
-        return actorRepository.findById(id);
+        return crewRepository.findById(id);
     }
 
     public List<Crew> findCrewByName(String name) {
-        return actorRepository.findByName(name.trim());
+        return crewRepository.findByName(name.trim());
     }
 
     public List<Crew> findCrewsByKeyword(String keyword) {
-        return actorRepository.findByNameContainingIgnoreCase(keyword.trim());
+        return crewRepository.findByNameContainingIgnoreCase(keyword.trim());
     }
 
 }

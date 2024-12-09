@@ -5,11 +5,42 @@ function init() {
         const nameLabel = document.getElementById('nameLabel');
 
         // Change le libellé en fonction du type sélectionné
-        if (selectedType === 'film') {
-            nameLabel.textContent = 'Film:';
-        } else {
-            nameLabel.textContent = 'Acteur/rice:';
+        switch (selectedType) {
+            case 'film':
+                nameLabel.textContent = 'Film:';
+                break;
+            case 'actor':
+                nameLabel.textContent = 'Acteur/rice:';
+                break;
+            case 'country':
+                nameLabel.textContent = 'Country:';
+                break;
+            case 'crew':
+                nameLabel.textContent = 'Crew:';
+                break;
+            case 'genre':
+                nameLabel.textContent = 'Genre:';
+                break;
+            case 'language':
+                nameLabel.textContent = 'Language:';
+                break;
+            case 'poster':
+                nameLabel.textContent = 'Poster:';
+                break;
+            case 'release':
+                nameLabel.textContent = 'Release:';
+                break;
+            case 'studio':
+                nameLabel.textContent = 'Studio:';
+                break;
+            case 'theme':
+                nameLabel.textContent = 'Theme:';
+                break;
+            default:
+                nameLabel.textContent = 'Type inconnu';
+                break;
         }
+
     });
 
     // Ajoute un gestionnaire d'événements pour la soumission du formulaire
@@ -23,11 +54,42 @@ function init() {
             alert('Veuillez saisir un nom pour votre recherche.');
             return;
         }
-        if (type === "film") {
-            searchFilm(name);
-        } else if (type === "actor") {
-            searchActor(name);
+        switch (type) {
+            case "film":
+                searchFilm(name);
+                break;
+            case "actor":
+                searchActor(name);
+                break;
+            case "country":
+                searchCountry(name);
+                break;
+            case "crew":
+                searchCrew(name);
+                break;
+            case "genre":
+                searchGenre(name);
+                break;
+            case "language":
+                searchLanguage(name);
+                break;
+            case "poster":
+                searchPoster(name);
+                break;
+            case "release":
+                searchRelease(name);
+                break;
+            case "studio":
+                searchStudio(name);
+                break;
+            case "theme":
+                searchTheme(name);
+                break;
+            default:
+                alert("Type de recherche inconnu.");
+                break;
         }
+
     });
  }
 
@@ -84,6 +146,243 @@ function searchActor(name) {
                         <h3>${actor.name}</h3>
                         <p>ID: ${actor.id}</p>
                         <p>Rôle: ${actor.role}</p>
+                    </div>
+                `).join("");
+                document.getElementById("results").innerHTML = results;
+            }
+        })
+        .catch(error => {
+            console.error("Erreur :", error);
+            document.getElementById("results").textContent = "Erreur lors de la récupération des données.";
+        });
+}
+
+function searchCountry(name) {
+    // Requête pour rechercher des pays par mot-clé
+    fetch('/countries/findByKeyword?name=' + encodeURIComponent(name))
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Erreur lors de la récupération des données.");
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.length === 0) {
+                document.getElementById("results").textContent = "Aucun pays trouvé.";
+            } else {
+                // Construire le HTML pour afficher les pays avec leur ID
+                const results = data.map(country => `
+                    <div>
+                        <h3>Pays: ${country.country}</h3>
+                        <p>ID: ${country.id}</p>
+                    </div>
+                `).join("");
+                document.getElementById("results").innerHTML = results;
+            }
+        })
+        .catch(error => {
+            console.error("Erreur :", error);
+            document.getElementById("results").textContent = "Erreur lors de la récupération des données.";
+        });
+}
+
+function searchCrew(name) {
+    // Requête pour rechercher des pays par mot-clé
+    fetch('/crews/findByKeyword?name=' + encodeURIComponent(name))
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Erreur lors de la récupération des données.");
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.length === 0) {
+                document.getElementById("results").textContent = "Aucun crew trouvé.";
+            } else {
+                // Construire le HTML pour afficher les pays avec leur ID
+                const results = data.map(crew => `
+                    <div>
+                        <h3>Name: ${crew.name}</h3>
+                        <p>ID: ${crew.id}</p>
+                        <p>Role : ${crew.role}</p>
+                    </div>
+                `).join("");
+                document.getElementById("results").innerHTML = results;
+            }
+        })
+        .catch(error => {
+            console.error("Erreur :", error);
+            document.getElementById("results").textContent = "Erreur lors de la récupération des données.";
+        });
+}
+
+function searchGenre(name) {
+    // Requête pour rechercher des pays par mot-clé
+    fetch('/genres/findByKeyword?name=' + encodeURIComponent(name))
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Erreur lors de la récupération des données.");
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.length === 0) {
+                document.getElementById("results").textContent = "Aucun pays trouvé.";
+            } else {
+                // Construire le HTML pour afficher les pays avec leur ID
+                const results = data.map(genre => `
+                    <div>
+                        <h3>Genre: ${genre.genre}</h3>
+                        <p>ID: ${genre.id}</p>
+                    </div>
+                `).join("");
+                document.getElementById("results").innerHTML = results;
+            }
+        })
+        .catch(error => {
+            console.error("Erreur :", error);
+            document.getElementById("results").textContent = "Erreur lors de la récupération des données.";
+        });
+}
+
+function searchLanguage(name) {
+    // Requête pour rechercher des pays par mot-clé
+    fetch('/languages/findByKeyword?name=' + encodeURIComponent(name))
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Erreur lors de la récupération des données.");
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.length === 0) {
+                document.getElementById("results").textContent = "Aucun pays trouvé.";
+            } else {
+                // Construire le HTML pour afficher les pays avec leur ID
+                const results = data.map(language => `
+                    <div>
+                        <h3>Language: ${language.language}</h3>
+                        <p>ID: ${language.id}</p>
+                        <p>Type: ${language.type}</p>
+                    </div>
+                `).join("");
+                document.getElementById("results").innerHTML = results;
+            }
+        })
+        .catch(error => {
+            console.error("Erreur :", error);
+            document.getElementById("results").textContent = "Erreur lors de la récupération des données.";
+        });
+}
+
+function searchPoster(name) {
+    // Requête pour rechercher des pays par mot-clé
+    fetch('/posters/findByKeyword?name=' + encodeURIComponent(name))
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Erreur lors de la récupération des données.");
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.length === 0) {
+                document.getElementById("results").textContent = "Aucun lien trouvé.";
+            } else {
+                // Construire le HTML pour afficher les pays avec leur ID
+                const results = data.map(poster => `
+                    <div>
+                        <h3>ID: ${poster.id}</h3>
+                        <p>Link: ${poster.link}</p>
+                    </div>
+                `).join("");
+                document.getElementById("results").innerHTML = results;
+            }
+        })
+        .catch(error => {
+            console.error("Erreur :", error);
+            document.getElementById("results").textContent = "Erreur lors de la récupération des données.";
+        });
+}
+
+function searchRelease(name) {
+    // Requête pour rechercher des pays par mot-clé
+    fetch('/releases/findByKeyword?name=' + encodeURIComponent(name))
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Erreur lors de la récupération des données.");
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.length === 0) {
+                document.getElementById("results").textContent = "Aucun lien trouvé.";
+            } else {
+                // Construire le HTML pour afficher les pays avec leur ID
+                const results = data.map(release => `
+                    <div>
+                        <h3>ID: ${release.id}</h3>
+                        <p>Country: ${release.country}</p>
+                        <p>Date: ${release.date}</p>
+                        <p>Type: ${release.type}</p>
+                        <p>Rating: ${release.rating}</p>
+                    </div>
+                `).join("");
+                document.getElementById("results").innerHTML = results;
+            }
+        })
+        .catch(error => {
+            console.error("Erreur :", error);
+            document.getElementById("results").textContent = "Erreur lors de la récupération des données.";
+        });
+}
+
+function searchStudio(name) {
+    // Requête pour rechercher des pays par mot-clé
+    fetch('/studios/findByKeyword?name=' + encodeURIComponent(name))
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Erreur lors de la récupération des données.");
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.length === 0) {
+                document.getElementById("results").textContent = "Aucun studio trouvé.";
+            } else {
+                // Construire le HTML pour afficher les pays avec leur ID
+                const results = data.map(studio => `
+                    <div>
+                        <h3>Studio: ${studio.studio}</h3>
+                        <p>ID: ${studio.id}</p>
+                    </div>
+                `).join("");
+                document.getElementById("results").innerHTML = results;
+            }
+        })
+        .catch(error => {
+            console.error("Erreur :", error);
+            document.getElementById("results").textContent = "Erreur lors de la récupération des données.";
+        });
+}
+
+function searchTheme(name) {
+    // Requête pour rechercher des pays par mot-clé
+    fetch('/themes/findByKeyword?name=' + encodeURIComponent(name))
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Erreur lors de la récupération des données.");
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.length === 0) {
+                document.getElementById("results").textContent = "Aucun studio trouvé.";
+            } else {
+                // Construire le HTML pour afficher les pays avec leur ID
+                const results = data.map(theme => `
+                    <div>
+                        <h3>Theme: ${theme.theme}</h3>
+                        <p>ID: ${theme.id}</p>
                     </div>
                 `).join("");
                 document.getElementById("results").innerHTML = results;

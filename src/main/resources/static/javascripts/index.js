@@ -36,6 +36,9 @@ function init() {
             case 'theme':
                 nameLabel.textContent = 'Theme:';
                 break;
+            case 'movieWithActors':
+                nameLabel.textContent = 'Movie with actors';
+                break;
             default:
                 nameLabel.textContent = 'Type inconnu';
                 break;
@@ -84,6 +87,9 @@ function init() {
                 break;
             case "theme":
                 searchTheme(name);
+                break;
+            case "movieWithActors":
+                searchMovieWithActors(name);
                 break;
             default:
                 alert("Type de recherche inconnu.");
@@ -393,3 +399,76 @@ function searchTheme(name) {
             document.getElementById("results").textContent = "Erreur lors de la récupération des données.";
         });
 }
+
+function searchMovieWithActors(name) {
+    fetch('/movies/findByNameMovieAndActors?name=' + encodeURIComponent(name))
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Film non trouvé ou erreur lors de la récupération.");
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.length === 0) {
+                document.getElementById("results").textContent = "Aucun film trouvé.";
+                return;
+            }
+
+            // Grouper les résultats par film (par movie_id)
+            const movies = {};
+            data.forEach(row => {
+                const movieId = row[0]; // movie_id
+                if (!movies[movieId]) {
+                    movies[movieId] = {
+                        id: movieId,
+                        name: row[1],
+                        date: row[2],
+                        description: row[3],
+                        duration: row[4],
+                        rating: row[5],
+                        tagline: row[6],
+                        actors: [],
+                    };
+                }
+                if (row[7]) {
+                    // Ajouter l'acteur à la liste des acteurs pour ce film
+                    movies[movieId].actors.push({
+                        name: row[7],
+                        role: row[8],
+                    });
+                }
+            });
+
+            // Construire le HTML pour afficher les films et leurs acteurs
+            const resultsHTML = Object.values(movies)
+                .map(movie => {
+                    const actorList = movie.actors
+                        .map(actor => `<li>${actor.name} as ${actor.role}</li>`)
+                        .join("");
+
+                    return `
+                        <div>
+                            <h3>${movie.name} (${movie.date})</h3>
+                            <p><strong>Tagline:</strong> ${movie.tagline}</p>
+                            <p><strong>Description:</strong> ${movie.description}</p>
+                            <p><strong>Duration:</strong> ${movie.duration} minutes</p>
+                            <p><strong>Rating:</strong> ${movie.rating}</p>
+                            <h4>Actors:</h4>
+                            <ul>
+                                ${actorList || "<li>No actors found.</li>"}
+                            </ul>
+                        </div>
+                    `;
+                })
+                .join("");
+
+            document.getElementById("results").innerHTML = resultsHTML;
+        })
+        .catch(error => {
+            console.error("Erreur :", error);
+            document.getElementById("results").textContent = "Erreur lors de la recherche du film.";
+        });
+}
+
+
+

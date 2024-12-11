@@ -38,4 +38,8 @@ public class MovieService {
     public List<Object[]> findMovieWithActors(String movieName) {
         return movieRepository.findMovieWithActorsByName(movieName);
     }
+
+    public List<Object[]> findPostersofMovies(String name) {
+        return movieRepository.findPosterofMoviesByName(name);
+    }
 }

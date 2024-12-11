@@ -39,6 +39,9 @@ function init() {
             case 'movieWithActors':
                 nameLabel.textContent = 'Movie with actors';
                 break;
+            case 'movieWithPosters':
+                nameLabel.textContent = 'Movie with posters';
+                break;
             default:
                 nameLabel.textContent = 'Type inconnu';
                 break;
@@ -90,6 +93,9 @@ function init() {
                 break;
             case "movieWithActors":
                 searchMovieWithActors(name);
+                break;
+            case "movieWithPosters":
+                searchMovieWithPosters(name);
                 break;
             default:
                 alert("Type de recherche inconnu.");
@@ -439,7 +445,7 @@ function searchMovieWithActors(name) {
                 }
             });
 
-            // Construire le HTML pour afficher les films et leurs acteurs
+            // Construire le HTML pour afficher les films et leurs posters
             const resultsHTML = Object.values(movies)
                 .map(movie => {
                     const actorList = movie.actors
@@ -469,6 +475,65 @@ function searchMovieWithActors(name) {
             document.getElementById("results").textContent = "Erreur lors de la recherche du film.";
         });
 }
+
+function searchMovieWithPosters(name) {
+    fetch('/movies/findPostersofMovies?name=' + encodeURIComponent(name))
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Film non trouvé ou erreur lors de la récupération.");
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.length === 0) {
+                document.getElementById("results").textContent = "Aucun film trouvé.";
+                return;
+            }
+
+            // Grouper les résultats par film (par movie_id)
+            const movies = {};
+            data.forEach(row => {
+                const movieId = row[0]; // movie_id
+                if (!movies[movieId]) {
+                    movies[movieId] = {
+                        id: movieId,
+                        name: row[1],
+                        date: row[2],
+                        description: row[3],
+                        duration: row[4],
+                        rating: row[5],
+                        tagline: row[6],
+                        posterLink: row[8], // Lien du poster
+                    };
+                }
+            });
+
+            // Construire le HTML pour afficher les films et leurs posters
+            const resultsHTML = Object.values(movies)
+                .map(movie => {
+                    return `
+                        <div>
+                            <h3>${movie.name} (${movie.date})</h3>
+                            <p>Tagline: ${movie.tagline}</p>
+                            <p>Description: ${movie.description}</p>
+                            <p>Duration: ${movie.duration} minutes</p>
+                            <p>Rating: ${movie.rating}</p>
+                            <h4>Poster:</h4>
+                            <img src="${movie.posterLink}" alt="Poster of ${movie.name}" style="max-width: 200px; max-height: 300px;">
+                        </div>
+                    `;
+                })
+                .join("");
+
+            document.getElementById("results").innerHTML = resultsHTML;
+        })
+        .catch(error => {
+            console.error("Erreur :", error);
+            document.getElementById("results").textContent = "Erreur lors de la recherche du film.";
+        });
+}
+
+
 
 
 

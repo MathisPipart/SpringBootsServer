@@ -62,4 +62,14 @@ public class MovieController {
         }
         return ResponseEntity.ok(results);
     }
+
+    @GetMapping("/findPostersofMovies")
+    public ResponseEntity<?> findPostersofMovies(@RequestParam String name) {
+        List<Object[]> results = movieService.findPostersofMovies(name);
+
+        if (results.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Poster non trouvé.");
+        }
+        return ResponseEntity.ok(results);
+    }
 }

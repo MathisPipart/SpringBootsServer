@@ -42,6 +42,9 @@ function init() {
             case 'movieWithPosters':
                 nameLabel.textContent = 'Movie with posters';
                 break;
+            case 'movieWithStudios':
+                nameLabel.textContent = 'Movie with studios';
+                break;
             default:
                 nameLabel.textContent = 'Type inconnu';
                 break;
@@ -96,6 +99,9 @@ function init() {
                 break;
             case "movieWithPosters":
                 searchMovieWithPosters(name);
+                break;
+            case "movieWithStudios":
+                searchMovieWithStudios(name);
                 break;
             default:
                 alert("Type de recherche inconnu.");
@@ -533,7 +539,73 @@ function searchMovieWithPosters(name) {
         });
 }
 
+function searchMovieWithStudios(name) {
+    fetch('/movies/findStudiosofMovies?name=' + encodeURIComponent(name))
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Studio non trouvé ou erreur lors de la récupération.");
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.length === 0) {
+                document.getElementById("results").textContent = "Aucun studio trouvé.";
+                return;
+            }
 
+            // Grouper les résultats par film (par movie_id)
+            const movies = {};
+            data.forEach(row => {
+                const movieId = row[0]; // movie_id
+                if (!movies[movieId]) {
+                    movies[movieId] = {
+                        id: movieId,
+                        name: row[1],
+                        date: row[2],
+                        description: row[3],
+                        duration: row[4],
+                        rating: row[5],
+                        tagline: row[6],
+                        studios: [],
+                    };
+                }
+                if (row[8]) {
+                    // Ajouter l'acteur à la liste des acteurs pour ce film
+                    movies[movieId].studios.push({
+                        studio: row[8]
+                    });
+                }
+            });
+
+            // Construire le HTML pour afficher les films et leurs posters
+            const resultsHTML = Object.values(movies)
+                .map(movie => {
+                    const studioList = movie.studios
+                        .map(studio => `<li>${studio.studio}</li>`)
+                        .join("");
+                    return `
+                        <div>
+                            <h3>${movie.name} (${movie.date})</h3>
+                            <p><strong>Tagline:</strong> ${movie.tagline}</p>
+                            <p><strong>Description:</strong> ${movie.description}</p>
+                            <p><strong>Duration:</strong> ${movie.duration} minutes</p>
+                            <p><strong>Rating:</strong> ${movie.rating}</p>
+                            <h4>Studios:</h4>
+                            <ul>
+                                ${studioList || "<li>No studios found.</li>"}
+                            </ul>
+                        </div>
+                    `;
+                })
+                .join("");
+
+            document.getElementById("results").innerHTML = resultsHTML;
+        })
+        .catch(error => {
+            console.error("Erreur :", error);
+            document.getElementById("results").textContent = "Erreur lors de la recherche du studio.";
+        });
+}
 
 
 

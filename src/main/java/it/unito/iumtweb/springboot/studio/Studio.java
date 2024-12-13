@@ -10,7 +10,7 @@ public class Studio {
     @GeneratedValue(strategy = GenerationType.IDENTITY) // Génération automatique de l'ID
     private Long id;
 
-    @Column(nullable = false) // Le champ "name" est obligatoire
+    @Column(nullable = false) // Le champ "studio" est obligatoire
     private String studio;
 
     /**

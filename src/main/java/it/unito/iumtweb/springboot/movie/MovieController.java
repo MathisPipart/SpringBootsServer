@@ -82,4 +82,14 @@ public class MovieController {
         }
         return ResponseEntity.ok(results);
     }
+
+    @GetMapping("/findCountriesofMovies")
+    public ResponseEntity<?> findCountriesofMovies(@RequestParam String name) {
+        List<Object[]> results = movieService.findCountriesofMovies(name);
+
+        if (results.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Studio non trouvé.");
+        }
+        return ResponseEntity.ok(results);
+    }
 }

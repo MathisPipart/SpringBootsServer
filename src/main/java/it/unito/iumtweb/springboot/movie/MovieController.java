@@ -102,4 +102,34 @@ public class MovieController {
         }
         return ResponseEntity.ok(results);
     }
+
+    @GetMapping("/findGenreofMovies")
+    public ResponseEntity<?> findGenreofMovies(@RequestParam String name) {
+        List<Object[]> results = movieService.findGenreofMovies(name);
+
+        if (results.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Genre non trouvé.");
+        }
+        return ResponseEntity.ok(results);
+    }
+
+    @GetMapping("/findLanguageofMovies")
+    public ResponseEntity<?> findLanguageofMovies(@RequestParam String name) {
+        List<Object[]> results = movieService.findLanguageofMovies(name);
+
+        if (results.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Langue non trouvé.");
+        }
+        return ResponseEntity.ok(results);
+    }
+
+    @GetMapping("/findThemeofMovies")
+    public ResponseEntity<?> findThemeofMovies(@RequestParam String name) {
+        List<Object[]> results = movieService.findThemeofMovies(name);
+
+        if (results.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Theme non trouvé.");
+        }
+        return ResponseEntity.ok(results);
+    }
 }

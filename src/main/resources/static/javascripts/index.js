@@ -51,6 +51,15 @@ function init() {
             case 'movieWithCrew':
                 nameLabel.textContent = 'Movie with crew';
                 break;
+            case 'movieWithGenre':
+                nameLabel.textContent = 'Movie with genre';
+                break;
+            case 'movieWithLanguage':
+                nameLabel.textContent = 'Movie with language';
+                break;
+            case 'movieWithTheme':
+                nameLabel.textContent = 'Movie with theme';
+                break;
             default:
                 nameLabel.textContent = 'Type inconnu';
                 break;
@@ -114,6 +123,15 @@ function init() {
                 break;
             case 'movieWithCrew':
                 searchMovieWithCrew(name);
+                break;
+            case 'movieWithGenre':
+                searchMovieWithGenre(name);
+                break;
+            case 'movieWithLanguage':
+                searchMovieWithLanguage(name);
+                break;
+            case 'movieWithTheme':
+                searchMovieWithTheme(name);
                 break;
             default:
                 alert("Type de recherche inconnu.");
@@ -463,7 +481,7 @@ function searchMovieWithActors(name) {
                 }
             });
 
-            // Construire le HTML pour afficher les films et leurs posters
+            // Construire le HTML pour afficher les films et leurs acteurs
             const resultsHTML = Object.values(movies)
                 .map(movie => {
                     const actorList = movie.actors
@@ -582,7 +600,7 @@ function searchMovieWithStudios(name) {
                     };
                 }
                 if (row[8]) {
-                    // Ajouter le studio à la liste des acteurs pour ce film
+                    // Ajouter le studio à la liste des studios pour ce film
                     movies[movieId].studios.push({
                         studio: row[8]
                     });
@@ -650,7 +668,7 @@ function searchMovieWithCountries(name) {
                     };
                 }
                 if (row[8]) {
-                    // Ajouter le pays à la liste des acteurs pour ce film
+                    // Ajouter le pays à la liste des pays pour ce film
                     movies[movieId].countries.push({
                         country: row[8]
                     });
@@ -726,7 +744,7 @@ function searchMovieWithCrew(name) {
             // Construire le HTML pour afficher les films et leur personnel
             const resultsHTML = Object.values(movies)
                 .map(movie => {
-                    const crewList = movie.crew.join(", "); // Séparer les membres par une virgule
+                    const crewList = movie.crew.join(', <span style="margin-left: 2em;"></span>'); // Séparer les membres par une virgule
                     return `
                         <div>
                             <h3>${movie.name} (${movie.date})</h3>
@@ -749,5 +767,201 @@ function searchMovieWithCrew(name) {
         });
 }
 
+function searchMovieWithGenre(name) {
+    fetch('/movies/findGenreofMovies?name=' + encodeURIComponent(name))
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Genre non trouvé ou erreur lors de la récupération.");
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.length === 0) {
+                document.getElementById("results").textContent = "Aucun genre trouvé.";
+                return;
+            }
 
+            // Grouper les résultats par film (par movie_id)
+            const movies = {};
+            data.forEach(row => {
+                const movieId = row[0]; // movie_id
+                if (!movies[movieId]) {
+                    movies[movieId] = {
+                        id: movieId,
+                        name: row[1],
+                        date: row[2],
+                        description: row[3],
+                        duration: row[4],
+                        rating: row[5],
+                        tagline: row[6],
+                        genres: [],
+                    };
+                }
+                if (row[8]) {
+                    // Ajouter le pays à la liste des genres pour ce film
+                    movies[movieId].genres.push({
+                        genre: row[8]
+                    });
+                }
+            });
 
+            // Construire le HTML pour afficher les films et leurs pays
+            const resultsHTML = Object.values(movies)
+                .map(movie => {
+                    const genreList = movie.genres
+                        .map(genre => `<li>${genre.genre}</li>`)
+                        .join("");
+                    return `
+                        <div>
+                            <h3>${movie.name} (${movie.date})</h3>
+                            <p>Tagline: ${movie.tagline}</p>
+                            <p>Description: ${movie.description}</p>
+                            <p>Duration: ${movie.duration} minutes</p>
+                            <p>Rating: ${movie.rating}</p>
+                            <h4>Genres:</h4>
+                            <ul>
+                                ${genreList || "<li>No genres found.</li>"}
+                            </ul>
+                        </div>
+                    `;
+                })
+                .join("");
+
+            document.getElementById("results").innerHTML = resultsHTML;
+        })
+        .catch(error => {
+            console.error("Erreur :", error);
+            document.getElementById("results").textContent = "Erreur lors de la recherche du genre.";
+        });
+}
+
+function searchMovieWithLanguage(name) {
+    fetch('/movies/findLanguageofMovies?name=' + encodeURIComponent(name))
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Langue non trouvé ou erreur lors de la récupération.");
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.length === 0) {
+                document.getElementById("results").textContent = "Aucune langue trouvé.";
+                return;
+            }
+
+            // Grouper les résultats par film (par movie_id)
+            const movies = {};
+            data.forEach(row => {
+                const movieId = row[0]; // movie_id
+                if (!movies[movieId]) {
+                    movies[movieId] = {
+                        id: movieId,
+                        name: row[1],
+                        date: row[2],
+                        description: row[3],
+                        duration: row[4],
+                        rating: row[5],
+                        tagline: row[6],
+                        languages: [],
+                    };
+                }
+                if (row[8] && row[9]) {
+                    // Ajouter la langue à la liste des langues pour ce film
+                    movies[movieId].languages.push({
+                        type: row[8],
+                        language: row[9],
+                    });
+                }
+            });
+
+            // Construire le HTML pour afficher les films et leurs langues
+            const resultsHTML = Object.values(movies)
+                .map(movie => {
+                    const languageList = movie.languages
+                        .map(language => `<li>${language.type} is ${language.language}</li>`)
+                        .join("");
+                    return `
+                        <div>
+                            <h3>${movie.name} (${movie.date})</h3>
+                            <p>Tagline: ${movie.tagline}</p>
+                            <p>Description: ${movie.description}</p>
+                            <p>Duration: ${movie.duration} minutes</p>
+                            <p>Rating: ${movie.rating}</p>
+                            <h4>Languages:</h4>
+                            <ul>
+                                ${languageList || "<li>No languages found.</li>"}
+                            </ul>
+                        </div>
+                    `;
+                })
+                .join("");
+
+            document.getElementById("results").innerHTML = resultsHTML;
+        })
+        .catch(error => {
+            console.error("Erreur :", error);
+            document.getElementById("results").textContent = "Erreur lors de la recherche de la langue.";
+        });
+}
+
+function searchMovieWithTheme(name) {
+    fetch('/movies/findThemeofMovies?name=' + encodeURIComponent(name))
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Theme non trouvé ou erreur lors de la récupération.");
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.length === 0) {
+                document.getElementById("results").textContent = "Aucun theme trouvé.";
+                return;
+            }
+
+            // Grouper les résultats par film (par movie_id)
+            const movies = {};
+            data.forEach(row => {
+                const movieId = row[0]; // movie_id
+                if (!movies[movieId]) {
+                    movies[movieId] = {
+                        id: movieId,
+                        name: row[1],
+                        date: row[2],
+                        description: row[3],
+                        duration: row[4],
+                        rating: row[5],
+                        tagline: row[6],
+                        themes: [],
+                    };
+                }
+                if (row[8]) {
+                    // Ajouter le theme à la liste des themes pour ce film
+                    movies[movieId].themes.push(`${row[8]}`);
+                }
+            });
+
+            // Construire le HTML pour afficher les films et leurs themes
+            const resultsHTML = Object.values(movies)
+                .map(movie => {
+                    const themeList = movie.themes.join(', <span style="margin-left: 2em;"></span>');
+                    return `
+                        <div>
+                            <h3>${movie.name} (${movie.date})</h3>
+                            <p>Tagline: ${movie.tagline}</p>
+                            <p>Description: ${movie.description}</p>
+                            <p>Duration: ${movie.duration} minutes</p>
+                            <p>Rating: ${movie.rating}</p>
+                            <h4>The movie's themes are :</h4>
+                                ${themeList || "<p>No themes found.</p>"}
+                        </div>
+                    `;
+                })
+                .join("");
+
+            document.getElementById("results").innerHTML = resultsHTML;
+        })
+        .catch(error => {
+            console.error("Erreur :", error);
+            document.getElementById("results").textContent = "Erreur lors de la recherche du theme.";
+        });
+}

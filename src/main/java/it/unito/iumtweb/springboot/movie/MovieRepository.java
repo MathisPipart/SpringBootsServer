@@ -31,4 +31,13 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
 
     @Query(nativeQuery = true, value = " SELECT m.id AS movie_id, m.name AS movie_name, m.date AS movie_date, m.description AS movie_description, m.minute AS movie_duration, m.rating AS movie_rating, m.tagline AS movie_tagline, c.id AS crew_id, c.role AS crew_role, c.name AS crew_name FROM movie m LEFT JOIN crew c ON m.id = c.id WHERE LOWER(m.name) LIKE LOWER(CONCAT('%', :movieName, '%'))")
     List<Object[]> findCrewofMoviesByName(@Param("movieName") String movieName);
+
+    @Query(nativeQuery = true, value = " SELECT m.id AS movie_id, m.name AS movie_name, m.date AS movie_date, m.description AS movie_description, m.minute AS movie_duration, m.rating AS movie_rating, m.tagline AS movie_tagline, g.id AS genre_id, g.genre AS genre_genre FROM movie m LEFT JOIN genre g ON m.id = g.id WHERE LOWER(m.name) LIKE LOWER(CONCAT('%', :movieName, '%'))")
+    List<Object[]> findGenreofMoviesByName(@Param("movieName") String movieName);
+
+    @Query(nativeQuery = true, value = " SELECT m.id AS movie_id, m.name AS movie_name, m.date AS movie_date, m.description AS movie_description, m.minute AS movie_duration, m.rating AS movie_rating, m.tagline AS movie_tagline, l.id AS language_id, l.type AS language_type, l.language AS language_language FROM movie m LEFT JOIN language l ON m.id = l.id WHERE LOWER(m.name) LIKE LOWER(CONCAT('%', :movieName, '%'))")
+    List<Object[]> findLanguageofMoviesByName(@Param("movieName") String movieName);
+
+    @Query(nativeQuery = true, value = " SELECT m.id AS movie_id, m.name AS movie_name, m.date AS movie_date, m.description AS movie_description, m.minute AS movie_duration, m.rating AS movie_rating, m.tagline AS movie_tagline, t.id AS theme_id, t.theme AS theme_theme FROM movie m LEFT JOIN theme t ON m.id = t.id WHERE LOWER(m.name) LIKE LOWER(CONCAT('%', :movieName, '%'))")
+    List<Object[]> findThemeofMoviesByName(@Param("movieName") String movieName);
 }

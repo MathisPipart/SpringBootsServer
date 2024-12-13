@@ -48,6 +48,9 @@ function init() {
             case 'movieWithCountries':
                 nameLabel.textContent = 'Movie with countries';
                 break;
+            case 'movieWithCrew':
+                nameLabel.textContent = 'Movie with crew';
+                break;
             default:
                 nameLabel.textContent = 'Type inconnu';
                 break;
@@ -108,6 +111,9 @@ function init() {
                 break;
             case "movieWithCountries":
                 searchMovieWithCountries(name);
+                break;
+            case 'movieWithCrew':
+                searchMovieWithCrew(name);
                 break;
             default:
                 alert("Type de recherche inconnu.");
@@ -576,14 +582,14 @@ function searchMovieWithStudios(name) {
                     };
                 }
                 if (row[8]) {
-                    // Ajouter l'acteur à la liste des acteurs pour ce film
+                    // Ajouter le studio à la liste des acteurs pour ce film
                     movies[movieId].studios.push({
                         studio: row[8]
                     });
                 }
             });
 
-            // Construire le HTML pour afficher les films et leurs posters
+            // Construire le HTML pour afficher les films et leurs studios
             const resultsHTML = Object.values(movies)
                 .map(movie => {
                     const studioList = movie.studios
@@ -592,10 +598,10 @@ function searchMovieWithStudios(name) {
                     return `
                         <div>
                             <h3>${movie.name} (${movie.date})</h3>
-                            <p><strong>Tagline:</strong> ${movie.tagline}</p>
-                            <p><strong>Description:</strong> ${movie.description}</p>
-                            <p><strong>Duration:</strong> ${movie.duration} minutes</p>
-                            <p><strong>Rating:</strong> ${movie.rating}</p>
+                            <p>Tagline: ${movie.tagline}</p>
+                            <p>Description: ${movie.description}</p>
+                            <p>Duration: ${movie.duration} minutes</p>
+                            <p>Rating: ${movie.rating}</p>
                             <h4>Studios:</h4>
                             <ul>
                                 ${studioList || "<li>No studios found.</li>"}
@@ -644,14 +650,14 @@ function searchMovieWithCountries(name) {
                     };
                 }
                 if (row[8]) {
-                    // Ajouter l'acteur à la liste des acteurs pour ce film
+                    // Ajouter le pays à la liste des acteurs pour ce film
                     movies[movieId].countries.push({
                         country: row[8]
                     });
                 }
             });
 
-            // Construire le HTML pour afficher les films et leurs posters
+            // Construire le HTML pour afficher les films et leurs pays
             const resultsHTML = Object.values(movies)
                 .map(movie => {
                     const countryList = movie.countries
@@ -660,14 +666,76 @@ function searchMovieWithCountries(name) {
                     return `
                         <div>
                             <h3>${movie.name} (${movie.date})</h3>
-                            <p><strong>Tagline:</strong> ${movie.tagline}</p>
-                            <p><strong>Description:</strong> ${movie.description}</p>
-                            <p><strong>Duration:</strong> ${movie.duration} minutes</p>
-                            <p><strong>Rating:</strong> ${movie.rating}</p>
+                            <p>Tagline: ${movie.tagline}</p>
+                            <p>Description: ${movie.description}</p>
+                            <p>Duration: ${movie.duration} minutes</p>
+                            <p>Rating: ${movie.rating}</p>
                             <h4>Countries:</h4>
                             <ul>
                                 ${countryList || "<li>No countries found.</li>"}
                             </ul>
+                        </div>
+                    `;
+                })
+                .join("");
+
+            document.getElementById("results").innerHTML = resultsHTML;
+        })
+        .catch(error => {
+            console.error("Erreur :", error);
+            document.getElementById("results").textContent = "Erreur lors de la recherche du studio.";
+        });
+}
+
+function searchMovieWithCrew(name) {
+    fetch('/movies/findCrewofMovies?name=' + encodeURIComponent(name))
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Personnel non trouvé ou erreur lors de la récupération.");
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.length === 0) {
+                document.getElementById("results").textContent = "Aucun personnel trouvé.";
+                return;
+            }
+
+            // Grouper les résultats par film (par movie_id)
+            const movies = {};
+            data.forEach(row => {
+                const movieId = row[0]; // movie_id
+                if (!movies[movieId]) {
+                    movies[movieId] = {
+                        id: movieId,
+                        name: row[1],
+                        date: row[2],
+                        description: row[3],
+                        duration: row[4],
+                        rating: row[5],
+                        tagline: row[6],
+                        crew: [],
+                    };
+                }
+                if (row[8] && row[9]) {
+                    // Ajouter le membre de l'équipe à la liste
+                    movies[movieId].crew.push(`${row[9]} as ${row[8]}`); // Nom + rôle
+                }
+            });
+
+            // Construire le HTML pour afficher les films et leur personnel
+            const resultsHTML = Object.values(movies)
+                .map(movie => {
+                    const crewList = movie.crew.join(", "); // Séparer les membres par une virgule
+                    return `
+                        <div>
+                            <h3>${movie.name} (${movie.date})</h3>
+                            <p>Tagline: ${movie.tagline}</p>
+                            <p>Description: ${movie.description}</p>
+                            <p>Duration: ${movie.duration} minutes</p>
+                            <p>Rating: ${movie.rating}</p>
+                            <h4>Crew:</h4>
+                                ${crewList || "<p>No crew found.</p>"}
                         </div>
                     `;
                 })

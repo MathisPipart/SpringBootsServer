@@ -50,4 +50,8 @@ public class MovieService {
     public List<Object[]> findCountriesofMovies(String name) {
         return movieRepository.findCountryofMoviesByName(name);
     }
+
+    public List<Object[]> findCrewofMovies(String name) {
+        return movieRepository.findCrewofMoviesByName(name);
+    }
 }

@@ -25,4 +25,7 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
 
     @Query(nativeQuery = true, value = " SELECT m.id AS movie_id, m.name AS movie_name, m.date AS movie_date, m.description AS movie_description, m.minute AS movie_duration, m.rating AS movie_rating, m.tagline AS movie_tagline, s.id AS studio_id, s.studio AS studio_studio FROM movie m LEFT JOIN studio s ON m.id = s.id WHERE LOWER(m.name) LIKE LOWER(CONCAT('%', :movieName, '%'))")
     List<Object[]> findStudioofMoviesByName(@Param("movieName") String movieName);
+
+    @Query(nativeQuery = true, value = " SELECT m.id AS movie_id, m.name AS movie_name, m.date AS movie_date, m.description AS movie_description, m.minute AS movie_duration, m.rating AS movie_rating, m.tagline AS movie_tagline, c.id AS country_id, c.country AS country_country FROM movie m LEFT JOIN country c ON m.id = c.id WHERE LOWER(m.name) LIKE LOWER(CONCAT('%', :movieName, '%'))")
+    List<Object[]> findCountryofMoviesByName(@Param("movieName") String movieName);
 }

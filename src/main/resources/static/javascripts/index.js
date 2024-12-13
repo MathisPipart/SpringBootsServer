@@ -45,6 +45,9 @@ function init() {
             case 'movieWithStudios':
                 nameLabel.textContent = 'Movie with studios';
                 break;
+            case 'movieWithCountries':
+                nameLabel.textContent = 'Movie with countries';
+                break;
             default:
                 nameLabel.textContent = 'Type inconnu';
                 break;
@@ -102,6 +105,9 @@ function init() {
                 break;
             case "movieWithStudios":
                 searchMovieWithStudios(name);
+                break;
+            case "movieWithCountries":
+                searchMovieWithCountries(name);
                 break;
             default:
                 alert("Type de recherche inconnu.");
@@ -593,6 +599,74 @@ function searchMovieWithStudios(name) {
                             <h4>Studios:</h4>
                             <ul>
                                 ${studioList || "<li>No studios found.</li>"}
+                            </ul>
+                        </div>
+                    `;
+                })
+                .join("");
+
+            document.getElementById("results").innerHTML = resultsHTML;
+        })
+        .catch(error => {
+            console.error("Erreur :", error);
+            document.getElementById("results").textContent = "Erreur lors de la recherche du studio.";
+        });
+}
+
+function searchMovieWithCountries(name) {
+    fetch('/movies/findCountriesofMovies?name=' + encodeURIComponent(name))
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Pays non trouvé ou erreur lors de la récupération.");
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.length === 0) {
+                document.getElementById("results").textContent = "Aucun pays trouvé.";
+                return;
+            }
+
+            // Grouper les résultats par film (par movie_id)
+            const movies = {};
+            data.forEach(row => {
+                const movieId = row[0]; // movie_id
+                if (!movies[movieId]) {
+                    movies[movieId] = {
+                        id: movieId,
+                        name: row[1],
+                        date: row[2],
+                        description: row[3],
+                        duration: row[4],
+                        rating: row[5],
+                        tagline: row[6],
+                        countries: [],
+                    };
+                }
+                if (row[8]) {
+                    // Ajouter l'acteur à la liste des acteurs pour ce film
+                    movies[movieId].countries.push({
+                        country: row[8]
+                    });
+                }
+            });
+
+            // Construire le HTML pour afficher les films et leurs posters
+            const resultsHTML = Object.values(movies)
+                .map(movie => {
+                    const countryList = movie.countries
+                        .map(country => `<li>${country.country}</li>`)
+                        .join("");
+                    return `
+                        <div>
+                            <h3>${movie.name} (${movie.date})</h3>
+                            <p><strong>Tagline:</strong> ${movie.tagline}</p>
+                            <p><strong>Description:</strong> ${movie.description}</p>
+                            <p><strong>Duration:</strong> ${movie.duration} minutes</p>
+                            <p><strong>Rating:</strong> ${movie.rating}</p>
+                            <h4>Countries:</h4>
+                            <ul>
+                                ${countryList || "<li>No countries found.</li>"}
                             </ul>
                         </div>
                     `;

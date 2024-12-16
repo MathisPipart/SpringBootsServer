@@ -63,6 +63,9 @@ function init() {
             case 'movieByGenre':
                 nameLabel.textContent = 'Movie by genre';
                 break;
+            case 'movieByDate':
+                nameLabel.textContent = 'Movie by date';
+                break;
             default:
                 nameLabel.textContent = 'Type inconnu';
                 break;
@@ -138,6 +141,9 @@ function init() {
                 break;
             case 'movieByGenre':
                 searchMoviesByGenre(name);
+                break;
+            case 'movieByDate':
+                searchMoviesByDate(name);
                 break;
             default:
                 alert("Type de recherche inconnu.");
@@ -1007,5 +1013,50 @@ function searchMoviesByGenre(genre) {
             document.getElementById("results").textContent = "Erreur lors de la récupération des films.";
         });
 }
+
+
+function searchMoviesByDate(date) {
+    if (!/^\d{4}$/.test(date)) {
+        document.getElementById("results").textContent = "La date saisie est invalide. Format attendu : YYYY.";
+        return;
+    }
+
+    fetch('/movies/findByDate?date=' + encodeURIComponent(date))
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Aucun film trouvé pour cette date.");
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.length === 0) {
+                document.getElementById("results").textContent = "Aucun film trouvé.";
+                return;
+            }
+
+            const resultsHTML = data.map(movie => `
+                <div>
+                    <h3>Nom du Film: ${movie.name}</h3>
+                    <p><strong>Date:</strong> ${movie.date}</p>
+                    <p><strong>Tagline:</strong> ${movie.tagline}</p>
+                    <p><strong>Description:</strong> ${movie.description}</p>
+                    <p><strong>Durée (minutes):</strong> ${movie.minute}</p>
+                    <p><strong>Note:</strong> ${movie.rating}</p>
+                    <p><strong>Genres:</strong> ${movie.genres}</p>
+                </div>
+            `).join("");
+
+            document.getElementById("results").innerHTML = resultsHTML;
+        })
+        .catch(error => {
+            console.error("Erreur :", error);
+            document.getElementById("results").textContent = "Erreur lors de la récupération des films.";
+        });
+}
+
+
+
+
+
 
 

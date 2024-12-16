@@ -144,4 +144,17 @@ public class MovieController {
         return ResponseEntity.ok(movies);
     }
 
+    @GetMapping("/findByDate")
+    public ResponseEntity<?> findMoviesByDate(@RequestParam String date) {
+        List<Map<String, Object>> movies = movieService.findMoviesByDate(date);
+
+        if (movies.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Aucun film trouvé pour cette date.");
+        }
+
+        return ResponseEntity.ok(movies);
+    }
+
+
+
 }

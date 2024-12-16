@@ -59,6 +59,15 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
     List<Map<String, Object>> findMoviesWithGenresByGenre(@Param("genreName") String genreName);
 
 
+    @Query(nativeQuery = true, value = "SELECT m.id, m.name, m.date, m.tagline, m.description, m.minute, m.rating, " +
+            "STRING_AGG(DISTINCT g.genre, ', ') AS genres " +
+            "FROM movie m " +
+            "JOIN genre g ON m.id = g.id " +
+            "WHERE m.date = CAST(:date AS INTEGER) " +
+            "GROUP BY m.id, m.name, m.date, m.tagline, m.description, m.minute, m.rating " +
+            "ORDER BY m.id ASC " +
+            "LIMIT 50")
+    List<Map<String, Object>> findMoviesByDate(@Param("date") String date);
 
 
 

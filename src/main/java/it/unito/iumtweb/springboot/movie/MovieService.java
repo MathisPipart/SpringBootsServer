@@ -76,6 +76,11 @@ public class MovieService {
         return movieRepository.findMoviesByDate(date);
     }
 
+    public List<Map<String, Object>> findMoviesByGenreAndDate(String genre, String date) {
+        return movieRepository.findMoviesByGenreAndDate(genre, date);
+    }
+
+
 
 
 }

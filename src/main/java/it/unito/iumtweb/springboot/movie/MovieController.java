@@ -156,5 +156,15 @@ public class MovieController {
     }
 
 
+    @GetMapping("/findByGenreAndDate")
+    public ResponseEntity<?> findMoviesByGenreAndDate(@RequestParam String genre, @RequestParam String date) {
+        List<Map<String, Object>> movies = movieService.findMoviesByGenreAndDate(genre, date);
+
+        if (movies.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Aucun film trouvé pour ces critères.");
+        }
+
+        return ResponseEntity.ok(movies);
+    }
 
 }

@@ -66,6 +66,9 @@ function init() {
             case 'movieByDate':
                 nameLabel.textContent = 'Movie by date';
                 break;
+            case 'movieByGenreAndDate':
+                nameLabel.textContent = 'Movie by genre and date';
+                break;
             default:
                 nameLabel.textContent = 'Type inconnu';
                 break;
@@ -144,6 +147,9 @@ function init() {
                 break;
             case 'movieByDate':
                 searchMoviesByDate(name);
+                break;
+            case 'movieByGenreAndDate':
+                searchMoviesByGenreAndDate();
                 break;
             default:
                 alert("Type de recherche inconnu.");
@@ -1053,6 +1059,44 @@ function searchMoviesByDate(date) {
             document.getElementById("results").textContent = "Erreur lors de la récupération des films.";
         });
 }
+
+function searchMoviesByGenreAndDate() {
+    const genre = 'Comedy';
+    const date = '2023';
+
+    fetch(`/movies/findByGenreAndDate?genre=${encodeURIComponent(genre)}&date=${encodeURIComponent(date)}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Aucun film trouvé pour ces critères.");
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.length === 0) {
+                document.getElementById("results").textContent = "Aucun film trouvé.";
+                return;
+            }
+
+            const resultsHTML = data.map(movie => `
+                <div>
+                    <h3>Nom du Film: ${movie.name}</h3>
+                    <p><strong>Date:</strong> ${movie.date}</p>
+                    <p><strong>Tagline:</strong> ${movie.tagline}</p>
+                    <p><strong>Description:</strong> ${movie.description}</p>
+                    <p><strong>Durée (minutes):</strong> ${movie.minute}</p>
+                    <p><strong>Note:</strong> ${movie.rating}</p>
+                    <p><strong>Genres:</strong> ${movie.genres}</p>
+                </div>
+            `).join("");
+
+            document.getElementById("results").innerHTML = resultsHTML;
+        })
+        .catch(error => {
+            console.error("Erreur :", error);
+            document.getElementById("results").textContent = "Erreur lors de la récupération des films.";
+        });
+}
+
 
 
 

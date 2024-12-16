@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -66,4 +67,9 @@ public class MovieService {
     public List<Object[]> findThemeofMovies(String name) {
         return movieRepository.findThemeofMoviesByName(name);
     }
+
+    public List<Map<String, Object>> findMoviesWithGenresByGenre(String genreName) {
+        return movieRepository.findMoviesWithGenresByGenre(genreName);
+    }
+
 }

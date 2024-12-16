@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -132,4 +133,15 @@ public class MovieController {
         }
         return ResponseEntity.ok(results);
     }
+
+    @GetMapping("/findByGenre")
+    public ResponseEntity<?> findMoviesByGenre(@RequestParam String genre) {
+        List<Map<String, Object>> movies = movieService.findMoviesWithGenresByGenre(genre);
+
+        if (movies.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Aucun film trouvé pour ce genre.");
+        }
+        return ResponseEntity.ok(movies);
+    }
+
 }

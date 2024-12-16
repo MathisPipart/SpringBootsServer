@@ -6,6 +6,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Repository
@@ -41,4 +42,24 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
 
     @Query(nativeQuery = true, value = " SELECT m.id AS movie_id, m.name AS movie_name, m.date AS movie_date, m.description AS movie_description, m.minute AS movie_duration, m.rating AS movie_rating, m.tagline AS movie_tagline, t.id AS theme_id, t.theme AS theme_theme FROM movie m LEFT JOIN theme t ON m.id = t.id WHERE LOWER(m.name) LIKE LOWER(CONCAT('%', :movieName, '%'))")
     List<Object[]> findThemeofMoviesByName(@Param("movieName") String movieName);
+
+
+    @Query(nativeQuery = true, value = "SELECT m.id, m.name, m.date, m.tagline, m.description, m.minute, m.rating, " +
+            "STRING_AGG(DISTINCT g.genre, ', ') AS genres " +
+            "FROM movie m " +
+            "JOIN genre g ON m.id = g.id " +
+            "WHERE m.id IN ( " +
+            "   SELECT m2.id " +
+            "   FROM movie m2 " +
+            "   JOIN genre g2 ON m2.id = g2.id " +
+            "   WHERE LOWER(g2.genre) = LOWER(:genreName) " +
+            ") " +
+            "GROUP BY m.id, m.name, m.date, m.tagline, m.description, m.minute, m.rating " +
+            "LIMIT 50")
+    List<Map<String, Object>> findMoviesWithGenresByGenre(@Param("genreName") String genreName);
+
+
+
+
+
 }

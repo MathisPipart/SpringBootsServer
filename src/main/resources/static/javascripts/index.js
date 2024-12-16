@@ -60,6 +60,9 @@ function init() {
             case 'movieWithTheme':
                 nameLabel.textContent = 'Movie with theme';
                 break;
+            case 'movieByGenre':
+                nameLabel.textContent = 'Movie by genre';
+                break;
             default:
                 nameLabel.textContent = 'Type inconnu';
                 break;
@@ -132,6 +135,9 @@ function init() {
                 break;
             case 'movieWithTheme':
                 searchMovieWithTheme(name);
+                break;
+            case 'movieByGenre':
+                searchMoviesByGenre(name);
                 break;
             default:
                 alert("Type de recherche inconnu.");
@@ -965,3 +971,41 @@ function searchMovieWithTheme(name) {
             document.getElementById("results").textContent = "Erreur lors de la recherche du theme.";
         });
 }
+
+
+function searchMoviesByGenre(genre) {
+    fetch('/movies/findByGenre?genre=' + encodeURIComponent(genre))
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Aucun film trouvé pour ce genre.");
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log("Données reçues :", data); // Inspecter les données
+            if (data.length === 0) {
+                document.getElementById("results").textContent = "Aucun film trouvé.";
+                return;
+            }
+
+            const resultsHTML = data.map(movie => `
+                <div>
+                    <h3>Nom du Film: ${movie.name}</h3>
+                    <p><strong>Date:</strong> ${movie.date}</p>
+                    <p><strong>Tagline:</strong> ${movie.tagline}</p>
+                    <p><strong>Description:</strong> ${movie.description}</p>
+                    <p><strong>Durée (minutes):</strong> ${movie.minute}</p>
+                    <p><strong>Note:</strong> ${movie.rating}</p>
+                    <p><strong>Genres:</strong> ${movie.genres}</p>
+                </div>
+            `).join("");
+
+            document.getElementById("results").innerHTML = resultsHTML;
+        })
+        .catch(error => {
+            console.error("Erreur :", error);
+            document.getElementById("results").textContent = "Erreur lors de la récupération des films.";
+        });
+}
+
+

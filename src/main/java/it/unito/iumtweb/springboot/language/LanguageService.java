@@ -35,5 +35,9 @@ public class LanguageService {
         return languageRepository.findByNameContainingIgnoreCase(keyword.trim());
     }
 
+    public List<String> findDistinctLanguages() {
+        return languageRepository.findDistinctLanguages();
+    }
+
 }
 

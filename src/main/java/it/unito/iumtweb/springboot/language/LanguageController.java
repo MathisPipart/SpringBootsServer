@@ -55,5 +55,16 @@ public class LanguageController {
         }
     }
 
+    @GetMapping("/distinct")
+    public ResponseEntity<List<String>> getDistinctLanguages() {
+        List<String> distinctLanguages = languageService.findDistinctLanguages();
+        if (!distinctLanguages.isEmpty()) {
+            return new ResponseEntity<>(distinctLanguages, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+
 }
 

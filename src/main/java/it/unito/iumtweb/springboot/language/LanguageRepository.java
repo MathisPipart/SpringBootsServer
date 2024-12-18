@@ -15,4 +15,6 @@ public interface LanguageRepository extends JpaRepository<Language, Long> {
     @Query("SELECT a FROM Language a WHERE LOWER(a.language) LIKE LOWER(CONCAT('%', :keyword, '%'))")
     List<Language> findByNameContainingIgnoreCase(String keyword);
 
+    @Query("SELECT DISTINCT l.language FROM Language l")
+    List<String> findDistinctLanguages();
 }

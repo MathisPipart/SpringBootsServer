@@ -1100,7 +1100,48 @@ function searchMoviesByGenreAndDate() {
 
 
 
+document.addEventListener("DOMContentLoaded", () => {
+    const languageSelect = document.getElementById("language-select");
+    const selectedLanguageDisplay = document.getElementById("selected-language");
+    const form = document.getElementById("language-form");
 
+    // Fonction pour récupérer les langues et remplir le menu déroulant
+    async function fetchLanguages() {
+        try {
+            const response = await fetch("/languages/distinct");
+            if (!response.ok) {
+                throw new Error("Erreur lors de la récupération des langues.");
+            }
+            const languages = await response.json();
+            populateLanguageSelect(languages);
+        } catch (error) {
+            console.error("Erreur :", error);
+            languageSelect.innerHTML = '<option value="">Erreur de chargement</option>';
+        }
+    }
 
+    // Fonction pour remplir le menu déroulant
+    function populateLanguageSelect(languages) {
+        languages.forEach(language => {
+            const option = document.createElement("option");
+            option.value = language;
+            option.textContent = language;
+            languageSelect.appendChild(option);
+        });
+    }
 
+    // Gestion de la soumission du formulaire
+    form.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const selectedLanguage = languageSelect.value;
+        if (selectedLanguage) {
+            selectedLanguageDisplay.textContent = `Langue sélectionnée : ${selectedLanguage}`;
+        } else {
+            selectedLanguageDisplay.textContent = "Langue sélectionnée : aucune";
+        }
+    });
+
+    // Charger les langues au chargement de la page
+    fetchLanguages();
+});
 

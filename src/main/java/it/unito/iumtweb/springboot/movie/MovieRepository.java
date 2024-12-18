@@ -14,7 +14,7 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
     // Add custom query methods if required
     Optional<Movie> findByName(String name);
 
-    @Query("SELECT m FROM Movie m WHERE LOWER(m.name) LIKE LOWER(CONCAT('%', :keyword, '%'))")
+    @Query("SELECT m FROM Movie m WHERE LOWER(m.name) LIKE LOWER(CONCAT('%', :keyword, '%')) ORDER BY m.id")
     List<Movie> findMoviesByNameKeyword(@Param("keyword") String keyword);
 
 

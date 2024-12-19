@@ -17,4 +17,7 @@ public interface LanguageRepository extends JpaRepository<Language, Long> {
 
     @Query("SELECT DISTINCT l.language FROM Language l")
     List<String> findDistinctLanguages();
+
+    @Query("SELECT DISTINCT l.type FROM Language l")
+    List<String> findDistinctTypes();
 }

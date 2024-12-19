@@ -59,12 +59,17 @@
 
 <h1>Choisissez une langue</h1>
 <form id="language-form">
+  <label for="type-select">Types disponibles :</label>
+  <select id="type-select" name="types">
+    <option value="">-- Sélectionnez un type --</option>
+  </select>
   <label for="language-select">Langues disponibles :</label>
   <select id="language-select" name="language">
     <option value="">-- Sélectionnez une langue --</option>
   </select>
   <button type="submit">Confirmer</button>
 </form>
+<p id="selected-type">Type sélectionnée : aucun</p>
 <p id="selected-language">Langue sélectionnée : aucune</p>
 
 

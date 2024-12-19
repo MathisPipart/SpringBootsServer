@@ -39,5 +39,9 @@ public class LanguageService {
         return languageRepository.findDistinctLanguages();
     }
 
+    public List<String> findDistinctTypes() {
+        return languageRepository.findDistinctTypes();
+    }
+
 }
 

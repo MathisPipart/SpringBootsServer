@@ -1101,26 +1101,40 @@ function searchMoviesByGenreAndDate() {
 
 
 document.addEventListener("DOMContentLoaded", () => {
+    const typeSelect = document.getElementById("type-select");
+    const selectedTypeDisplay = document.getElementById("selected-type");
     const languageSelect = document.getElementById("language-select");
     const selectedLanguageDisplay = document.getElementById("selected-language");
     const form = document.getElementById("language-form");
 
-    // Fonction pour récupérer les langues et remplir le menu déroulant
     async function fetchLanguages() {
         try {
-            const response = await fetch("/languages/distinct");
+            const response = await fetch("/languages/distinctLanguages");
             if (!response.ok) {
                 throw new Error("Erreur lors de la récupération des langues.");
             }
             const languages = await response.json();
+            console.log("Langues récupérées :", languages); // Debug
             populateLanguageSelect(languages);
         } catch (error) {
             console.error("Erreur :", error);
             languageSelect.innerHTML = '<option value="">Erreur de chargement</option>';
         }
+
+        try {
+            const response = await fetch("/languages/distinctTypes");
+            if (!response.ok) {
+                throw new Error("Erreur lors de la récupération des types.");
+            }
+            const types = await response.json();
+            console.log("Types récupérés :", types); // Debug
+            populateTypeSelect(types);
+        } catch (error) {
+            console.error("Erreur :", error);
+            typeSelect.innerHTML = '<option value="">Erreur de chargement</option>';
+        }
     }
 
-    // Fonction pour remplir le menu déroulant
     function populateLanguageSelect(languages) {
         languages.forEach(language => {
             const option = document.createElement("option");
@@ -1130,18 +1144,29 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // Gestion de la soumission du formulaire
+    function populateTypeSelect(types) {
+        types.forEach(type => {
+            const option = document.createElement("option");
+            option.value = type;
+            option.textContent = type;
+            typeSelect.appendChild(option);
+        });
+    }
+
     form.addEventListener("submit", (event) => {
         event.preventDefault();
         const selectedLanguage = languageSelect.value;
-        if (selectedLanguage) {
-            selectedLanguageDisplay.textContent = `Langue sélectionnée : ${selectedLanguage}`;
-        } else {
-            selectedLanguageDisplay.textContent = "Langue sélectionnée : aucune";
-        }
+        const selectedType = typeSelect.value;
+        selectedLanguageDisplay.textContent = selectedLanguage
+            ? `Langue sélectionnée : ${selectedLanguage}`
+            : "Langue sélectionnée : aucune";
+
+        selectedTypeDisplay.textContent = selectedType
+            ? `Type sélectionné : ${selectedType}`
+            : "Type sélectionné : aucun";
     });
 
-    // Charger les langues au chargement de la page
     fetchLanguages();
 });
+
 

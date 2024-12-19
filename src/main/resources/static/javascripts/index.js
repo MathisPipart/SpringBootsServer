@@ -1079,6 +1079,7 @@ function searchMoviesByGenreAndDate() {
 
             const resultsHTML = data.map(movie => `
                 <div>
+                    <h1>Film recherché par genre : ${genre} et date : ${date} </h1>
                     <h3>Nom du Film: ${movie.name}</h3>
                     <p><strong>Date:</strong> ${movie.date}</p>
                     <p><strong>Tagline:</strong> ${movie.tagline}</p>

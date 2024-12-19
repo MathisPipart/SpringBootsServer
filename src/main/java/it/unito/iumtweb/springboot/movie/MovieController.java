@@ -167,4 +167,14 @@ public class MovieController {
         return ResponseEntity.ok(movies);
     }
 
+    @GetMapping("/findMoviesByLanguageAndType")
+    public ResponseEntity<?> findMoviesByLanguageAndType(@RequestParam String selectedLanguage, @RequestParam String selectedType) {
+        List<Object[]> results = movieService.findMoviesByLanguageAndType(selectedLanguage, selectedType);
+        if (results.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Aucun film trouvé pour les critères donnés.");
+        }
+
+        return ResponseEntity.ok(results);
+    }
+
 }

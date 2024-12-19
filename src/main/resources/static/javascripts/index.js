@@ -1164,9 +1164,81 @@ document.addEventListener("DOMContentLoaded", () => {
         selectedTypeDisplay.textContent = selectedType
             ? `Type sélectionné : ${selectedType}`
             : "Type sélectionné : aucun";
+
+        searchMovies(selectedLanguage, selectedType);
     });
 
     fetchLanguages();
 });
+
+function searchMovies(selectedLanguage, selectedType) {
+    fetch(`/movies/findMoviesByLanguageAndType?selectedLanguage=${encodeURIComponent(selectedLanguage)}&selectedType=${encodeURIComponent(selectedType)}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Aucun film trouvé ou erreur lors de la récupération.");
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.length === 0) {
+                document.getElementById("results").textContent = "Aucun film trouvé.";
+                return;
+            }
+
+            // Grouper les résultats par film (par movie_id)
+            const movies = {};
+            data.forEach(row => {
+                const movieId = row[0]; // movie_id
+                if (!movies[movieId]) {
+                    movies[movieId] = {
+                        id: movieId,
+                        name: row[1],
+                        date: row[2],
+                        description: row[3],
+                        duration: row[4],
+                        rating: row[5],
+                        tagline: row[6],
+                        languages: [],
+                    };
+                }
+                if (row[8] && row[9]) {
+                    movies[movieId].languages.push({
+                        type: row[8],
+                        language: row[9],
+                    });
+                }
+            });
+
+            // Construire le HTML pour afficher les films et leurs langues
+            const resultsHTML = Object.values(movies)
+                .map(movie => {
+                    const languageList = movie.languages
+                        .map(language => `<li>${language.type} : ${language.language}</li>`)
+                        .join("");
+                    return `
+                        <div>
+                            <h3>${movie.name} (${movie.date})</h3>
+                            <p>Tagline: ${movie.tagline}</p>
+                            <p>Description: ${movie.description}</p>
+                            <p>Duration: ${movie.duration} minutes</p>
+                            <p>Rating: ${movie.rating}</p>
+                            <h4>Languages:</h4>
+                            <ul>
+                                ${languageList || "<li>Aucune langue trouvée.</li>"}
+                            </ul>
+                        </div>
+                    `;
+                })
+                .join("");
+
+            document.getElementById("results").innerHTML = resultsHTML;
+        })
+        .catch(error => {
+            console.error("Erreur :", error);
+            document.getElementById("results").textContent = "Erreur lors de la recherche des films.";
+        });
+}
+
+
 
 

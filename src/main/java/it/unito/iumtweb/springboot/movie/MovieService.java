@@ -80,7 +80,9 @@ public class MovieService {
         return movieRepository.findMoviesByGenreAndDate(genre, date);
     }
 
-
+    public List<Object[]> findMoviesByLanguageAndType(String language, String type) {
+        return movieRepository.findMoviesByLanguageAndType(language, type);
+    }
 
 
 }

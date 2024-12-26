@@ -105,6 +105,7 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
             "LEFT JOIN language l ON m.id = l.id " +
             "LEFT JOIN poster p ON m.id = p.id " +
             "WHERE LOWER(l.language) = LOWER(:selectedLanguage) AND LOWER(l.type) = LOWER(:selectedType) " +
+            "ORDER BY m.id ASC " +
             "LIMIT 50")
     List<Object[]> findMoviesByLanguageAndType(@Param("selectedLanguage") String selectedLanguage, @Param("selectedType") String selectedType);
 

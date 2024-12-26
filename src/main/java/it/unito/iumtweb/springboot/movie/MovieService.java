@@ -32,7 +32,7 @@ public class MovieService {
         return movieRepository.findByName(name);
     }
 
-    public List<Movie> findMoviesByKeyword(String keyword) {
+    public List<Map<String, Object>> findMoviesByKeyword(String keyword) {
         return movieRepository.findMoviesByNameKeyword(keyword);
     }
 

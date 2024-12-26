@@ -160,7 +160,6 @@ function init() {
  }
 
 function searchFilm(name) {
-    // Requête pour rechercher des films
     fetch('/movies/findByKeyword?name=' + encodeURIComponent(name))
         .then(response => {
             if (!response.ok) {
@@ -172,7 +171,6 @@ function searchFilm(name) {
             if (data.length === 0) {
                 document.getElementById("results").textContent = "Aucun film trouvé.";
             } else {
-                // Construire le HTML pour afficher les films
                 const results = data.map(movie => `
                     <div>
                         <h3>${movie.name}</h3>
@@ -182,6 +180,7 @@ function searchFilm(name) {
                         <p>Description: ${movie.description}</p>
                         <p>Durée: ${movie.minute} minutes</p>
                         <p>Note: ${movie.rating}</p>
+                        <p><img src="${movie.link}" alt="Poster Film" style="max-width:200px;"/></p>
                     </div>
                 `).join("");
                 document.getElementById("results").innerHTML = results;
@@ -192,6 +191,7 @@ function searchFilm(name) {
             document.getElementById("results").textContent = "Erreur lors de la récupération des données.";
         });
 }
+
 
 function searchActor(name) {
     // Requête pour rechercher des acteurs
@@ -1009,6 +1009,7 @@ function searchMoviesByGenre(genre) {
                     <p><strong>Durée (minutes):</strong> ${movie.minute}</p>
                     <p><strong>Note:</strong> ${movie.rating}</p>
                     <p><strong>Genres:</strong> ${movie.genres}</p>
+                    <img src="${movie.link}" alt="Poster Film" style="max-width: 200px;">
                 </div>
             `).join("");
 
@@ -1049,6 +1050,7 @@ function searchMoviesByDate(date) {
                     <p><strong>Durée (minutes):</strong> ${movie.minute}</p>
                     <p><strong>Note:</strong> ${movie.rating}</p>
                     <p><strong>Genres:</strong> ${movie.genres}</p>
+                    <img src="${movie.link}" alt="Poster Film" style="max-width: 200px;">
                 </div>
             `).join("");
 
@@ -1087,6 +1089,7 @@ function searchMoviesByGenreAndDate() {
                     <p><strong>Durée (minutes):</strong> ${movie.minute}</p>
                     <p><strong>Note:</strong> ${movie.rating}</p>
                     <p><strong>Genres:</strong> ${movie.genres}</p>
+                    <img src="${movie.link}" alt="Poster Film" style="max-width: 200px;">
                 </div>
             `).join("");
 
@@ -1199,6 +1202,7 @@ function searchMovies(selectedLanguage, selectedType) {
                         duration: row[4],
                         rating: row[5],
                         tagline: row[6],
+                        posterLink: row[10],
                         languages: [],
                     };
                 }
@@ -1219,6 +1223,7 @@ function searchMovies(selectedLanguage, selectedType) {
                     return `
                         <div>
                             <h3>${movie.name} (${movie.date})</h3>
+                            <p><img src="${movie.posterLink}" alt="Poster Film" style="max-width:200px;"/></p>
                             <p>Tagline: ${movie.tagline}</p>
                             <p>Description: ${movie.description}</p>
                             <p>Duration: ${movie.duration} minutes</p>

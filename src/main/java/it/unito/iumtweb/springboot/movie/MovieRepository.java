@@ -14,8 +14,14 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
     // Add custom query methods if required
     Optional<Movie> findByName(String name);
 
-    @Query("SELECT m FROM Movie m WHERE LOWER(m.name) LIKE LOWER(CONCAT('%', :keyword, '%')) ORDER BY m.id")
-    List<Movie> findMoviesByNameKeyword(@Param("keyword") String keyword);
+    @Query("SELECT m.id AS id, m.name AS name, m.date AS date, m.tagline AS tagline, " +
+            "m.description AS description, m.minute AS minute, m.rating AS rating, p.link AS link " +
+            "FROM Movie m " +
+            "LEFT JOIN Poster p ON m.id = p.id " +
+            "WHERE LOWER(m.name) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
+            "ORDER BY m.id")
+    List<Map<String, Object>> findMoviesByNameKeyword(@Param("keyword") String keyword);
+
 
 
     @Query(nativeQuery = true, value = " SELECT m.id AS movie_id, m.name AS movie_name, m.date AS movie_date, m.description AS movie_description, m.minute AS movie_duration, m.rating AS movie_rating, m.tagline AS movie_tagline, a.name AS actor_name, a.role AS actor_role FROM movie m LEFT JOIN actor a ON m.id = a.id WHERE LOWER(m.name) LIKE LOWER(CONCAT('%', :movieName, '%'))")
@@ -44,36 +50,40 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
     List<Object[]> findThemeofMoviesByName(@Param("movieName") String movieName);
 
 
-    @Query(nativeQuery = true, value = "SELECT m.id, m.name, m.date, m.tagline, m.description, m.minute, m.rating, " +
+    @Query(nativeQuery = true, value = "SELECT m.id, m.name, m.date, m.tagline, m.description, m.minute, m.rating, p.link, " +
             "STRING_AGG(DISTINCT g.genre, ', ') AS genres " +
             "FROM movie m " +
             "JOIN genre g ON m.id = g.id " +
+            "JOIN poster p ON m.id = p.id " +
             "WHERE m.id IN ( " +
             "   SELECT m2.id " +
             "   FROM movie m2 " +
             "   JOIN genre g2 ON m2.id = g2.id " +
             "   WHERE LOWER(g2.genre) = LOWER(:genreName) " +
             ") " +
-            "GROUP BY m.id, m.name, m.date, m.tagline, m.description, m.minute, m.rating " +
+            "GROUP BY m.id, m.name, m.date, m.tagline, m.description, m.minute, m.rating, p.link " +
             "LIMIT 50")
     List<Map<String, Object>> findMoviesWithGenresByGenre(@Param("genreName") String genreName);
 
 
-    @Query(nativeQuery = true, value = "SELECT m.id, m.name, m.date, m.tagline, m.description, m.minute, m.rating, " +
+
+    @Query(nativeQuery = true, value = "SELECT m.id, m.name, m.date, m.tagline, m.description, m.minute, m.rating, p.link, " +
             "STRING_AGG(DISTINCT g.genre, ', ') AS genres " +
             "FROM movie m " +
             "JOIN genre g ON m.id = g.id " +
+            "JOIN poster p ON m.id = p.id " +
             "WHERE m.date = CAST(:date AS INTEGER) " +
-            "GROUP BY m.id, m.name, m.date, m.tagline, m.description, m.minute, m.rating " +
+            "GROUP BY m.id, m.name, m.date, m.tagline, m.description, m.minute, m.rating, p.link " +
             "ORDER BY m.id ASC " +
             "LIMIT 50")
     List<Map<String, Object>> findMoviesByDate(@Param("date") String date);
 
 
-    @Query(nativeQuery = true, value = "SELECT m.id, m.name, m.date, m.tagline, m.description, m.minute, m.rating, " +
+    @Query(nativeQuery = true, value = "SELECT m.id, m.name, m.date, m.tagline, m.description, m.minute, m.rating, p.link, " +
             "STRING_AGG(DISTINCT g.genre, ', ') AS genres " +
             "FROM movie m " +
             "JOIN genre g ON m.id = g.id " +
+            "JOIN poster p ON m.id = p.id " +
             "WHERE m.id IN ( " +
             "   SELECT m2.id " +
             "   FROM movie m2 " +
@@ -81,7 +91,7 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
             "   WHERE LOWER(g2.genre) = LOWER(:genre) " +
             "   AND m2.date = CAST(:date AS INTEGER) " +
             ") " +
-            "GROUP BY m.id, m.name, m.date, m.tagline, m.description, m.minute, m.rating " +
+            "GROUP BY m.id, m.name, m.date, m.tagline, m.description, m.minute, m.rating, p.link " +
             "ORDER BY m.id ASC " +
             "LIMIT 50")
     List<Map<String, Object>> findMoviesByGenreAndDate(@Param("genre") String genre, @Param("date") String date);
@@ -89,12 +99,15 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
 
     @Query(nativeQuery = true, value = "SELECT m.id AS movie_id, m.name AS movie_name, m.date AS movie_date, " +
             "m.description AS movie_description, m.minute AS movie_duration, m.rating AS movie_rating, " +
-            "m.tagline AS movie_tagline, l.id AS language_id, l.type AS language_type, l.language AS language_language " +
+            "m.tagline AS movie_tagline, l.id AS language_id, l.type AS language_type, l.language AS language_language, " +
+            "p.link AS poster_link " +
             "FROM movie m " +
             "LEFT JOIN language l ON m.id = l.id " +
-            "WHERE LOWER(l.language) = LOWER(:selectedLanguage) AND LOWER(l.type) = LOWER(:selectedType)" +
+            "LEFT JOIN poster p ON m.id = p.id " +
+            "WHERE LOWER(l.language) = LOWER(:selectedLanguage) AND LOWER(l.type) = LOWER(:selectedType) " +
             "LIMIT 50")
     List<Object[]> findMoviesByLanguageAndType(@Param("selectedLanguage") String selectedLanguage, @Param("selectedType") String selectedType);
+
 
 
 }

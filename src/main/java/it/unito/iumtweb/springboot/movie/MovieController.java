@@ -45,12 +45,12 @@ public class MovieController {
     }
 
     @GetMapping("/findByKeyword")
-    public ResponseEntity<List<Movie>> findMoviesByKeyword(@RequestParam String name) {
-        List<Movie> movies = movieService.findMoviesByKeyword(name);
+    public ResponseEntity<?> findMoviesByKeyword(@RequestParam String name) {
+        List<Map<String, Object>> movies = movieService.findMoviesByKeyword(name);
         if (!movies.isEmpty()) {
-            return new ResponseEntity<>(movies, HttpStatus.OK);
+            return ResponseEntity.ok(movies);
         } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Aucun film trouvé.");
         }
     }
 

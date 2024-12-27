@@ -84,5 +84,7 @@ public class MovieService {
         return movieRepository.findMoviesByLanguageAndType(language, type);
     }
 
-
+    public List<Map<String, Object>> findTopRatedMovies() {
+        return movieRepository.findTopRatedMovies();
+    }
 }

@@ -192,7 +192,6 @@ function searchFilm(name) {
         });
 }
 
-
 function searchActor(name) {
     // Requête pour rechercher des acteurs
     fetch('/actors/findByKeyword?name=' + encodeURIComponent(name))
@@ -457,6 +456,42 @@ function searchTheme(name) {
         .catch(error => {
             console.error("Erreur :", error);
             document.getElementById("results").textContent = "Erreur lors de la récupération des données.";
+        });
+}
+
+function searchTopRatedMovies(name) {
+    // Fetch the 50 top-rated movies from the API endpoint
+    fetch('/movies/topRated?name=' + encodeURIComponent(name))
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Error fetching top-rated movies.");
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.length === 0) {
+                document.getElementById("results").textContent = "No top-rated movies found.";
+                return;
+            }
+
+            // Construct the HTML to display the movies
+            const resultsHTML = data.map(movie => `
+                <div>
+                    <h3>${movie.name} (${movie.date})</h3>
+                    <p><img src="${movie.link}" alt="Movie Poster" style="max-width:200px;"/></p>
+                    <p><strong>Tagline:</strong> ${movie.tagline}</p>
+                    <p><strong>Description:</strong> ${movie.description}</p>
+                    <p><strong>Duration:</strong> ${movie.minute} minutes</p>
+                    <p><strong>Rating:</strong> ${movie.rating}</p>
+                </div>
+            `).join("");
+
+            // Update the results section with the generated HTML
+            document.getElementById("results").innerHTML = resultsHTML;
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            document.getElementById("results").textContent = "Failed to fetch top-rated movies.";
         });
 }
 
@@ -1244,7 +1279,4 @@ function searchMovies(selectedLanguage, selectedType) {
             document.getElementById("results").textContent = "Erreur lors de la recherche des films.";
         });
 }
-
-
-
 

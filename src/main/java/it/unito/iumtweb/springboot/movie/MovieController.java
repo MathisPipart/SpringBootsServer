@@ -38,7 +38,6 @@ public class MovieController {
 
     @GetMapping("/findByName")
     public ResponseEntity<it.unito.iumtweb.springboot.movie.Movie> findMovieByName(@RequestParam String name) {
-        System.out.println("IN findMovieByName");
         Optional<Movie> movie = movieService.findMovieByName(name);
         return movie.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
@@ -176,5 +175,15 @@ public class MovieController {
 
         return ResponseEntity.ok(results);
     }
+
+    @GetMapping("/topRated")
+    public ResponseEntity<?> getTopRatedMovies() {
+        List<Map<String, Object>> results = movieService.findTopRatedMovies();
+        if (results == null || results.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Aucun film trouvé.");
+        }
+        return ResponseEntity.ok(results);
+    }
+
 
 }

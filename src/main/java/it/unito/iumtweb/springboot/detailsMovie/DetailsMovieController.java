@@ -3,10 +3,12 @@ package it.unito.iumtweb.springboot.detailsMovie;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/detailsMovies")
@@ -17,23 +19,6 @@ public class DetailsMovieController {
     @Autowired
     public DetailsMovieController(DetailsMovieService detailsMovieService) {
         this.detailsMovieService = detailsMovieService;
-    }
-
-    @PostMapping("/insert")
-    public ResponseEntity<DetailsMovie> insertDetailsMovie(@RequestBody DetailsMovie detailsMovie) {
-        DetailsMovie savedDetailsMovie = detailsMovieService.saveDetailsMovie(detailsMovie);
-        return new ResponseEntity<>(savedDetailsMovie, HttpStatus.CREATED);
-    }
-
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> deleteDetailsMovie(@PathVariable Long id) {
-        Optional<DetailsMovie> detailsMovie = detailsMovieService.findDetailsMovieById(id);
-        if (detailsMovie.isPresent()) {
-            detailsMovieService.deleteDetailsMovieById(id);
-            return new ResponseEntity<>("DetailsMovie deleted successfully", HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>("DetailsMovie not found", HttpStatus.NOT_FOUND);
-        }
     }
 
     @GetMapping("/findAll")

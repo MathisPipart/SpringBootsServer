@@ -6,6 +6,9 @@ function init() {
 
         // Change le libellé en fonction du type sélectionné
         switch (selectedType) {
+            case 'movieDetails':
+                nameLabel.textContent = 'Movie Details:';
+                break;
             case 'film':
                 nameLabel.textContent = 'Film:';
                 break;
@@ -88,6 +91,9 @@ function init() {
             return;
         }
         switch (type) {
+            case "movieDetails":
+                searchMovieDetails(name);
+                break;
             case "film":
                 searchFilm(name);
                 break;
@@ -158,6 +164,56 @@ function init() {
 
     });
  }
+
+
+function searchMovieDetails(id) {
+    const url = `http://localhost:8082/detailsMovies/findById/${id}`; // URL complète de l'API
+
+    fetch(url)
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw new Error(`Film avec l'id ${id} non trouvé (status: ${response.status})`);
+            }
+        })
+        .then(data => {
+            console.log("Détails du film :", data);
+            displayMovieDetails(data);
+        })
+        .catch(error => {
+            console.error("Erreur lors de la récupération des détails du film :", error);
+        });
+}
+
+function displayMovieDetails(movie) {
+    const container = document.getElementById('results');
+
+    if (!container) {
+        console.error("Conteneur avec l'ID 'results' non trouvé dans le DOM.");
+        return;
+    }
+
+    const content = `
+        <h2>${movie.name} (${movie.date})</h2>
+        <img src="${movie.link}" alt="${movie.name}" style="max-width: 100%; height: auto;" />
+        <p><strong>Tagline:</strong> ${movie.tagline}</p>
+        <p><strong>Description:</strong> ${movie.description}</p>
+        <p><strong>Duration:</strong> ${movie.minute} minutes</p>
+        <p><strong>Rating:</strong> ${movie.rating}</p>
+        <p><strong>Genres:</strong> ${movie.genres}</p>
+        <p><strong>Actors:</strong> ${movie.actors}</p>
+        <p><strong>Countries:</strong> ${movie.countries}</p>
+        <p><strong>Languages:</strong> ${movie.languages}</p>
+        <p><strong>Releases:</strong> ${movie.releases}</p>
+        <p><strong>Studios:</strong> ${movie.studios}</p>
+        <p><strong>Themes:</strong> ${movie.themes}</p>
+        <p><strong>Crew:</strong> ${movie.crew}</p>
+    `;
+
+    container.innerHTML = content;
+}
+
 
 function searchFilm(name) {
     fetch('/movies/findByKeyword?name=' + encodeURIComponent(name))

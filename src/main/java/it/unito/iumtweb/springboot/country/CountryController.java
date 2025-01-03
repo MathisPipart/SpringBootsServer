@@ -18,23 +18,6 @@ public class CountryController {
         this.countryService = countryService;
     }
 
-    @PostMapping("/insert")
-    public ResponseEntity<Country> insertCountry(@RequestBody Country countrie) {
-        Country savedCountry = countryService.saveCountry(countrie);
-        return new ResponseEntity<>(savedCountry, HttpStatus.CREATED);
-    }
-
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> deleteCountry(@PathVariable Long id) {
-        Optional<Country> countrie = countryService.findCountryById(id);
-        if (countrie.isPresent()) {
-            countryService.deleteCountryById(id);
-            return new ResponseEntity<>("Country deleted successfully", HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>("Country not found", HttpStatus.NOT_FOUND);
-        }
-    }
-
     @GetMapping("/findByName")
     public ResponseEntity<List<Country>> findCountryByName(@RequestParam String name) {
         List<Country> countries = countryService.findCountryByName(name);

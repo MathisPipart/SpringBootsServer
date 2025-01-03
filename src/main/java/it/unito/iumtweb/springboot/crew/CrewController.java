@@ -18,23 +18,6 @@ public class CrewController {
         this.crewService = crewService;
     }
 
-    @PostMapping("/insert")
-    public ResponseEntity<it.unito.iumtweb.springboot.crew.Crew> insertCrew(@RequestBody it.unito.iumtweb.springboot.crew.Crew countrie) {
-        it.unito.iumtweb.springboot.crew.Crew savedCrew = crewService.saveCrew(countrie);
-        return new ResponseEntity<>(savedCrew, HttpStatus.CREATED);
-    }
-
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> deleteCrew(@PathVariable Long id) {
-        Optional<it.unito.iumtweb.springboot.crew.Crew> countrie = crewService.findCrewById(id);
-        if (countrie.isPresent()) {
-            crewService.deleteCrewById(id);
-            return new ResponseEntity<>("Crew deleted successfully", HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>("Crew not found", HttpStatus.NOT_FOUND);
-        }
-    }
-
     @GetMapping("/findByName")
     public ResponseEntity<List<it.unito.iumtweb.springboot.crew.Crew>> findCrewByName(@RequestParam String name) {
         List<it.unito.iumtweb.springboot.crew.Crew> crews = crewService.findCrewByName(name);

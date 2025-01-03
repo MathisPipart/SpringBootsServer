@@ -7,10 +7,10 @@ import jakarta.persistence.*;
 public class Studio {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // Génération automatique de l'ID
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // Automatically generates the ID
     private Long id;
 
-    @Column(nullable = false) // Le champ "studio" est obligatoire
+    @Column(nullable = false) // The "studio" field is mandatory
     private String studio;
 
     /**

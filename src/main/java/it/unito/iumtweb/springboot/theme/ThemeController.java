@@ -19,23 +19,6 @@ public class ThemeController {
         this.themeService = themeService;
     }
 
-    @PostMapping("/insert")
-    public ResponseEntity<it.unito.iumtweb.springboot.theme.Theme> insertTheme(@RequestBody it.unito.iumtweb.springboot.theme.Theme countrie) {
-        it.unito.iumtweb.springboot.theme.Theme savedTheme = themeService.saveTheme(countrie);
-        return new ResponseEntity<>(savedTheme, HttpStatus.CREATED);
-    }
-
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> deleteTheme(@PathVariable Long id) {
-        Optional<it.unito.iumtweb.springboot.theme.Theme> countrie = themeService.findThemeById(id);
-        if (countrie.isPresent()) {
-            themeService.deleteThemeById(id);
-            return new ResponseEntity<>("Theme deleted successfully", HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>("Theme not found", HttpStatus.NOT_FOUND);
-        }
-    }
-
     @GetMapping("/findByName")
     public ResponseEntity<List<it.unito.iumtweb.springboot.theme.Theme>> findThemeByName(@RequestParam String name) {
         List<it.unito.iumtweb.springboot.theme.Theme> themes = themeService.findThemeByName(name);

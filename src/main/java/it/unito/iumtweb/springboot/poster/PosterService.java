@@ -14,18 +14,6 @@ public class PosterService {
     public PosterService(PosterRepository posterRepository) {
         this.posterRepository = posterRepository;
     }
-    
-    public Poster savePoster(Poster poster) {
-        return posterRepository.save(poster);
-    }
-
-    public void deletePosterById(Long id) {
-        posterRepository.deleteById(id);
-    }
-
-    public Optional<Poster> findPosterById(Long id) {
-        return posterRepository.findById(id);
-    }
 
     public List<Poster> findPosterByName(String name) {
         return posterRepository.findByName(name.trim());

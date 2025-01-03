@@ -14,18 +14,6 @@ public class ReleaseService {
     public ReleaseService(ReleaseRepository releaseRepository) {
         this.releaseRepository = releaseRepository;
     }
-    
-    public Release saveRelease(Release release) {
-        return releaseRepository.save(release);
-    }
-
-    public void deleteReleaseById(Long id) {
-        releaseRepository.deleteById(id);
-    }
-
-    public Optional<Release> findReleaseById(Long id) {
-        return releaseRepository.findById(id);
-    }
 
     public List<Release> findReleaseByName(String name) {
         return releaseRepository.findByName(name.trim());

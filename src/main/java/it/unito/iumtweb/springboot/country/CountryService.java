@@ -14,18 +14,6 @@ public class CountryService {
     public CountryService(CountryRepository countryRepository) {
         this.countryRepository = countryRepository;
     }
-    
-    public Country saveCountry(Country country) {
-        return countryRepository.save(country);
-    }
-
-    public void deleteCountryById(Long id) {
-        countryRepository.deleteById(id);
-    }
-
-    public Optional<Country> findCountryById(Long id) {
-        return countryRepository.findById(id);
-    }
 
     public List<Country> findCountryByName(String name) {
         return countryRepository.findByName(name.trim());

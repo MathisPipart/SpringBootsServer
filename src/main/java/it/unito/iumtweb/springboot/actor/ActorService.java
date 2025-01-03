@@ -14,17 +14,6 @@ public class ActorService {
     public ActorService(ActorRepository actorRepository) {
         this.actorRepository = actorRepository;
     }
-    public Actor saveActor(Actor actor) {
-        return actorRepository.save(actor);
-    }
-
-    public void deleteActorById(Long id) {
-        actorRepository.deleteById(id);
-    }
-
-    public Optional<Actor> findActorById(Long id) {
-        return actorRepository.findById(id);
-    }
 
     public List<Actor> findActorByName(String name) {
         return actorRepository.findByName(name.trim());

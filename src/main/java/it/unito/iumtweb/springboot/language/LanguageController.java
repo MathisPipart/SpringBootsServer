@@ -18,23 +18,6 @@ public class LanguageController {
         this.languageService = languageService;
     }
 
-    @PostMapping("/insert")
-    public ResponseEntity<it.unito.iumtweb.springboot.language.Language> insertLanguage(@RequestBody it.unito.iumtweb.springboot.language.Language countrie) {
-        it.unito.iumtweb.springboot.language.Language savedLanguage = languageService.saveLanguage(countrie);
-        return new ResponseEntity<>(savedLanguage, HttpStatus.CREATED);
-    }
-
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> deleteLanguage(@PathVariable Long id) {
-        Optional<it.unito.iumtweb.springboot.language.Language> countrie = languageService.findLanguageById(id);
-        if (countrie.isPresent()) {
-            languageService.deleteLanguageById(id);
-            return new ResponseEntity<>("Language deleted successfully", HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>("Language not found", HttpStatus.NOT_FOUND);
-        }
-    }
-
     @GetMapping("/findByName")
     public ResponseEntity<List<it.unito.iumtweb.springboot.language.Language>> findLanguageByName(@RequestParam String name) {
         List<it.unito.iumtweb.springboot.language.Language> languages = languageService.findLanguageByName(name);

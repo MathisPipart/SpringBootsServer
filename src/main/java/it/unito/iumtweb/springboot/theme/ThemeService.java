@@ -14,18 +14,6 @@ public class ThemeService {
     public ThemeService(ThemeRepository themeRepository) {
         this.themeRepository = themeRepository;
     }
-    
-    public Theme saveTheme(Theme theme) {
-        return themeRepository.save(theme);
-    }
-
-    public void deleteThemeById(Long id) {
-        themeRepository.deleteById(id);
-    }
-
-    public Optional<Theme> findThemeById(Long id) {
-        return themeRepository.findById(id);
-    }
 
     public List<Theme> findThemeByName(String name) {
         return themeRepository.findByName(name.trim());

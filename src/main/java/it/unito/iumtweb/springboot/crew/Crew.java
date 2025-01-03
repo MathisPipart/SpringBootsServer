@@ -7,13 +7,13 @@ import jakarta.persistence.*;
 public class Crew {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // Génération automatique de l'ID
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // Automatically generates the ID
     private Long id;
 
-    @Column(nullable = false) // Le champ "name" est obligatoire
+    @Column(nullable = false) // Each crew member has a role
     private String role;
 
-    @Column
+    @Column // The "name" field is mandatory
     private String name;
 
     /**

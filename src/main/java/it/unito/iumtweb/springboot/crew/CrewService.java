@@ -14,18 +14,6 @@ public class CrewService {
     public CrewService(CrewRepository crewRepository) {
         this.crewRepository = crewRepository;
     }
-    
-    public Crew saveCrew(Crew crew) {
-        return crewRepository.save(crew);
-    }
-
-    public void deleteCrewById(Long id) {
-        crewRepository.deleteById(id);
-    }
-
-    public Optional<Crew> findCrewById(Long id) {
-        return crewRepository.findById(id);
-    }
 
     public List<Crew> findCrewByName(String name) {
         return crewRepository.findByName(name.trim());

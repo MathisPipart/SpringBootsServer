@@ -14,18 +14,6 @@ public class StudioService {
     public StudioService(StudioRepository studioRepository) {
         this.studioRepository = studioRepository;
     }
-    
-    public Studio saveStudio(Studio studio) {
-        return studioRepository.save(studio);
-    }
-
-    public void deleteStudioById(Long id) {
-        studioRepository.deleteById(id);
-    }
-
-    public Optional<Studio> findStudioById(Long id) {
-        return studioRepository.findById(id);
-    }
 
     public List<Studio> findStudioByName(String name) {
         return studioRepository.findByName(name.trim());

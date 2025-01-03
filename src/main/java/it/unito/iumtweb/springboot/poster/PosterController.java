@@ -18,23 +18,6 @@ public class PosterController {
         this.posterService = posterService;
     }
 
-    @PostMapping("/insert")
-    public ResponseEntity<it.unito.iumtweb.springboot.poster.Poster> insertPoster(@RequestBody it.unito.iumtweb.springboot.poster.Poster countrie) {
-        it.unito.iumtweb.springboot.poster.Poster savedPoster = posterService.savePoster(countrie);
-        return new ResponseEntity<>(savedPoster, HttpStatus.CREATED);
-    }
-
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> deletePoster(@PathVariable Long id) {
-        Optional<it.unito.iumtweb.springboot.poster.Poster> countrie = posterService.findPosterById(id);
-        if (countrie.isPresent()) {
-            posterService.deletePosterById(id);
-            return new ResponseEntity<>("Poster deleted successfully", HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>("Poster not found", HttpStatus.NOT_FOUND);
-        }
-    }
-
     @GetMapping("/findByName")
     public ResponseEntity<List<it.unito.iumtweb.springboot.poster.Poster>> findPosterByName(@RequestParam String name) {
         List<it.unito.iumtweb.springboot.poster.Poster> posters = posterService.findPosterByName(name);

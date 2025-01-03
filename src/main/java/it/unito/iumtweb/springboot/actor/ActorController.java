@@ -18,23 +18,6 @@ public class ActorController {
         this.actorService = actorService;
     }
 
-    @PostMapping("/insert")
-    public ResponseEntity<it.unito.iumtweb.springboot.actor.Actor> insertActor(@RequestBody it.unito.iumtweb.springboot.actor.Actor actor) {
-        it.unito.iumtweb.springboot.actor.Actor savedActor = actorService.saveActor(actor);
-        return new ResponseEntity<>(savedActor, HttpStatus.CREATED);
-    }
-
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> deleteActor(@PathVariable Long id) {
-        Optional<it.unito.iumtweb.springboot.actor.Actor> actor = actorService.findActorById(id);
-        if (actor.isPresent()) {
-            actorService.deleteActorById(id);
-            return new ResponseEntity<>("Actor deleted successfully", HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>("Actor not found", HttpStatus.NOT_FOUND);
-        }
-    }
-
     @GetMapping("/findByName")
     public ResponseEntity<List<Actor>> findActorByName(@RequestParam String name) {
         List<Actor> actors = actorService.findActorByName(name);

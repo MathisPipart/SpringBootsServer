@@ -7,10 +7,10 @@ import jakarta.persistence.*;
 public class Country {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // Génération automatique de l'ID
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // Automatically generates the ID
     private Long id;
 
-    @Column(nullable = false) // Le champ "name" est obligatoire
+    @Column(nullable = false) // The "name" field is mandatory
     private String country;
 
     /**

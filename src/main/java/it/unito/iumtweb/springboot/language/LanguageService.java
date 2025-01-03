@@ -14,18 +14,6 @@ public class LanguageService {
     public LanguageService(LanguageRepository languageRepository) {
         this.languageRepository = languageRepository;
     }
-    
-    public Language saveLanguage(Language language) {
-        return languageRepository.save(language);
-    }
-
-    public void deleteLanguageById(Long id) {
-        languageRepository.deleteById(id);
-    }
-
-    public Optional<Language> findLanguageById(Long id) {
-        return languageRepository.findById(id);
-    }
 
     public List<Language> findLanguageByName(String name) {
         return languageRepository.findByName(name.trim());

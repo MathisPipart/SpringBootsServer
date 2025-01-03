@@ -7,25 +7,25 @@ import jakarta.persistence.*;
 public class Movie {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // Génération automatique de l'ID
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // Automatically generates the ID
     private Long id;
 
-    @Column(nullable = false) // Le champ "name" est obligatoire
+    @Column(nullable = false) // The "name" field is mandatory
     private String name;
 
-    @Column(nullable = true) // "date" peut être nul, car c'est un entier
+    @Column(nullable = true) // "date" can be null because it is an integer
     private Integer date;
 
-    @Column(nullable = true) // "tagline" peut être nul
+    @Column(nullable = true) // "tagline" can be null
     private String tagline;
 
-    @Column(nullable = true) // "description" peut être nul
+    @Column(nullable = true) // "description" can be null
     private String description;
 
-    @Column(nullable = true) // "minute" peut être nul
+    @Column(nullable = true) // "minute" can be null
     private Integer minute;
 
-    @Column(nullable = true) // "rating" peut être nul avec précision 3, scale 2
+    @Column(nullable = true) // "rating" can be null with precision 3 and scale 2
     private Double rating;
 
     /**

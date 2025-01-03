@@ -19,23 +19,6 @@ public class ReleaseController {
         this.releaseService = releaseService;
     }
 
-    @PostMapping("/insert")
-    public ResponseEntity<it.unito.iumtweb.springboot.release.Release> insertRelease(@RequestBody it.unito.iumtweb.springboot.release.Release countrie) {
-        it.unito.iumtweb.springboot.release.Release savedRelease = releaseService.saveRelease(countrie);
-        return new ResponseEntity<>(savedRelease, HttpStatus.CREATED);
-    }
-
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> deleteRelease(@PathVariable Long id) {
-        Optional<it.unito.iumtweb.springboot.release.Release> countrie = releaseService.findReleaseById(id);
-        if (countrie.isPresent()) {
-            releaseService.deleteReleaseById(id);
-            return new ResponseEntity<>("Release deleted successfully", HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>("Release not found", HttpStatus.NOT_FOUND);
-        }
-    }
-
     @GetMapping("/findByName")
     public ResponseEntity<List<it.unito.iumtweb.springboot.release.Release>> findReleaseByName(@RequestParam String name) {
         List<it.unito.iumtweb.springboot.release.Release> releases = releaseService.findReleaseByName(name);

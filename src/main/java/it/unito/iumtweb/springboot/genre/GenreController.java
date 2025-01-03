@@ -18,23 +18,6 @@ public class GenreController {
         this.genreService = genreService;
     }
 
-    @PostMapping("/insert")
-    public ResponseEntity<it.unito.iumtweb.springboot.genre.Genre> insertGenre(@RequestBody it.unito.iumtweb.springboot.genre.Genre countrie) {
-        it.unito.iumtweb.springboot.genre.Genre savedGenre = genreService.saveGenre(countrie);
-        return new ResponseEntity<>(savedGenre, HttpStatus.CREATED);
-    }
-
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> deleteGenre(@PathVariable Long id) {
-        Optional<it.unito.iumtweb.springboot.genre.Genre> countrie = genreService.findGenreById(id);
-        if (countrie.isPresent()) {
-            genreService.deleteGenreById(id);
-            return new ResponseEntity<>("Genre deleted successfully", HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>("Genre not found", HttpStatus.NOT_FOUND);
-        }
-    }
-
     @GetMapping("/findByName")
     public ResponseEntity<List<it.unito.iumtweb.springboot.genre.Genre>> findGenreByName(@RequestParam String name) {
         List<it.unito.iumtweb.springboot.genre.Genre> genres = genreService.findGenreByName(name);

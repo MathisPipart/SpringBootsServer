@@ -16,18 +16,6 @@ public class MovieService {
         this.movieRepository = movieRepository;
     }
 
-    public Movie saveMovie(Movie movie) {
-        return movieRepository.save(movie);
-    }
-
-    public void deleteMovieById(Long id) {
-        movieRepository.deleteById(id);
-    }
-
-    public Optional<Movie> findMovieById(Long id) {
-        return movieRepository.findById(id);
-    }
-
     public Optional<Movie> findMovieByName(String name) {
         return movieRepository.findByName(name);
     }

@@ -8,7 +8,7 @@ public class DetailsMovie {
     @Id
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false) // The "name" field is mandatory
     private String name;
 
     private Integer date;

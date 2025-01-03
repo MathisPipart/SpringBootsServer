@@ -19,23 +19,6 @@ public class MovieController {
         this.movieService = movieService;
     }
 
-    @PostMapping("/insert")
-    public ResponseEntity<it.unito.iumtweb.springboot.movie.Movie> insertMovie(@RequestBody it.unito.iumtweb.springboot.movie.Movie movie) {
-        it.unito.iumtweb.springboot.movie.Movie savedMovie = movieService.saveMovie(movie);
-        return new ResponseEntity<>(savedMovie, HttpStatus.CREATED);
-    }
-
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> deleteMovie(@PathVariable Long id) {
-        Optional<it.unito.iumtweb.springboot.movie.Movie> movie = movieService.findMovieById(id);
-        if (movie.isPresent()) {
-            movieService.deleteMovieById(id);
-            return new ResponseEntity<>("Movie deleted successfully", HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>("Movie not found", HttpStatus.NOT_FOUND);
-        }
-    }
-
     @GetMapping("/findByName")
     public ResponseEntity<it.unito.iumtweb.springboot.movie.Movie> findMovieByName(@RequestParam String name) {
         Optional<Movie> movie = movieService.findMovieByName(name);

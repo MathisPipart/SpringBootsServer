@@ -19,23 +19,6 @@ public class StudioController {
         this.studioService = studioService;
     }
 
-    @PostMapping("/insert")
-    public ResponseEntity<it.unito.iumtweb.springboot.studio.Studio> insertStudio(@RequestBody it.unito.iumtweb.springboot.studio.Studio countrie) {
-        it.unito.iumtweb.springboot.studio.Studio savedStudio = studioService.saveStudio(countrie);
-        return new ResponseEntity<>(savedStudio, HttpStatus.CREATED);
-    }
-
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> deleteStudio(@PathVariable Long id) {
-        Optional<it.unito.iumtweb.springboot.studio.Studio> countrie = studioService.findStudioById(id);
-        if (countrie.isPresent()) {
-            studioService.deleteStudioById(id);
-            return new ResponseEntity<>("Studio deleted successfully", HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>("Studio not found", HttpStatus.NOT_FOUND);
-        }
-    }
-
     @GetMapping("/findByName")
     public ResponseEntity<List<it.unito.iumtweb.springboot.studio.Studio>> findStudioByName(@RequestParam String name) {
         List<it.unito.iumtweb.springboot.studio.Studio> studios = studioService.findStudioByName(name);

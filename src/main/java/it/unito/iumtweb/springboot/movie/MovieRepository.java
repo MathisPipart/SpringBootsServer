@@ -25,29 +25,53 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
 
 
 
-    @Query(nativeQuery = true, value = " SELECT m.id AS movie_id, m.name AS movie_name, m.date AS movie_date, m.description AS movie_description, m.minute AS movie_duration, m.rating AS movie_rating, m.tagline AS movie_tagline, a.name AS actor_name, a.role AS actor_role FROM movie m LEFT JOIN actor a ON m.id = a.id WHERE LOWER(m.name) LIKE LOWER(CONCAT('%', :movieName, '%'))")
+    @Query(nativeQuery = true, value = "SELECT m.id, m.name, m.date, m.description, m.minute, m.rating, m.tagline, a.name, a.role" +
+            "FROM movie m" +
+            "LEFT JOIN actor a ON m.id = a.id" +
+            "WHERE LOWER(m.name) LIKE LOWER(CONCAT('%', :movieName, '%'))")
     List<Object[]> findMovieWithActorsByName(@Param("movieName") String movieName);
 
 
-    @Query(nativeQuery = true, value = " SELECT m.id AS movie_id, m.name AS movie_name, m.date AS movie_date, m.description AS movie_description, m.minute AS movie_duration, m.rating AS movie_rating, m.tagline AS movie_tagline, p.id AS poster_id, p.link AS poster_link FROM movie m LEFT JOIN poster p ON m.id = p.id WHERE LOWER(m.name) LIKE LOWER(CONCAT('%', :movieName, '%'))")
+    @Query(nativeQuery = true, value = "SELECT m.id, m.name, m.date, m.description, m.minute, m.rating, m.tagline, p.id, p.link" +
+            "FROM movie m"+
+            "LEFT JOIN poster p ON m.id = p.id" +
+            "WHERE LOWER(m.name) LIKE LOWER(CONCAT('%', :movieName, '%'))")
     List<Object[]> findPosterofMoviesByName(@Param("movieName") String movieName);
 
-    @Query(nativeQuery = true, value = " SELECT m.id AS movie_id, m.name AS movie_name, m.date AS movie_date, m.description AS movie_description, m.minute AS movie_duration, m.rating AS movie_rating, m.tagline AS movie_tagline, s.id AS studio_id, s.studio AS studio_studio FROM movie m LEFT JOIN studio s ON m.id = s.id WHERE LOWER(m.name) LIKE LOWER(CONCAT('%', :movieName, '%'))")
+    @Query(nativeQuery = true, value = "SELECT m.id, m.name, m.date, m.description, m.minute, m.rating, m.tagline, s.id, s.studio"+
+            "FROM movie m"+
+            "LEFT JOIN studio s ON m.id = s.id"+
+            "WHERE LOWER(m.name) LIKE LOWER(CONCAT('%', :movieName, '%'))")
     List<Object[]> findStudioofMoviesByName(@Param("movieName") String movieName);
 
-    @Query(nativeQuery = true, value = " SELECT m.id AS movie_id, m.name AS movie_name, m.date AS movie_date, m.description AS movie_description, m.minute AS movie_duration, m.rating AS movie_rating, m.tagline AS movie_tagline, c.id AS country_id, c.country AS country_country FROM movie m LEFT JOIN country c ON m.id = c.id WHERE LOWER(m.name) LIKE LOWER(CONCAT('%', :movieName, '%'))")
+    @Query(nativeQuery = true, value = "SELECT m.id, m.name, m.date, m.description, m.minute, m.rating, m.tagline, c.id, c.country"+
+            "FROM movie m"+
+            "LEFT JOIN country c ON m.id = c.id"+
+            "WHERE LOWER(m.name) LIKE LOWER(CONCAT('%', :movieName, '%'))")
     List<Object[]> findCountryofMoviesByName(@Param("movieName") String movieName);
 
-    @Query(nativeQuery = true, value = " SELECT m.id AS movie_id, m.name AS movie_name, m.date AS movie_date, m.description AS movie_description, m.minute AS movie_duration, m.rating AS movie_rating, m.tagline AS movie_tagline, c.id AS crew_id, c.role AS crew_role, c.name AS crew_name FROM movie m LEFT JOIN crew c ON m.id = c.id WHERE LOWER(m.name) LIKE LOWER(CONCAT('%', :movieName, '%'))")
+    @Query(nativeQuery = true, value = "SELECT m.id, m.name, m.date, m.description, m.minute, m.rating, m.tagline, c.id, c.role, c.name"+
+            "FROM movie m"+
+            "LEFT JOIN crew c ON m.id = c.id"+
+            "WHERE LOWER(m.name) LIKE LOWER(CONCAT('%', :movieName, '%'))")
     List<Object[]> findCrewofMoviesByName(@Param("movieName") String movieName);
 
-    @Query(nativeQuery = true, value = " SELECT m.id AS movie_id, m.name AS movie_name, m.date AS movie_date, m.description AS movie_description, m.minute AS movie_duration, m.rating AS movie_rating, m.tagline AS movie_tagline, g.id AS genre_id, g.genre AS genre_genre FROM movie m LEFT JOIN genre g ON m.id = g.id WHERE LOWER(m.name) LIKE LOWER(CONCAT('%', :movieName, '%'))")
+    @Query(nativeQuery = true, value = "SELECT m.id, m.name, m.date, m.description, m.minute, m.rating, m.tagline, g.id, g.genre"+
+            "FROM movie m"+
+            "LEFT JOIN genre g ON m.id = g.id"+
+            "WHERE LOWER(m.name) LIKE LOWER(CONCAT('%', :movieName, '%'))")
     List<Object[]> findGenreofMoviesByName(@Param("movieName") String movieName);
 
-    @Query(nativeQuery = true, value = " SELECT m.id AS movie_id, m.name AS movie_name, m.date AS movie_date, m.description AS movie_description, m.minute AS movie_duration, m.rating AS movie_rating, m.tagline AS movie_tagline, l.id AS language_id, l.type AS language_type, l.language AS language_language FROM movie m LEFT JOIN language l ON m.id = l.id WHERE LOWER(m.name) LIKE LOWER(CONCAT('%', :movieName, '%'))")
+    @Query(nativeQuery = true, value = "SELECT m.id, m.name, m.date, m.description, m.minute, m.rating, m.tagline, l.id, l.type, l.language"+
+            "FROM movie m"+
+            "LEFT JOIN language l ON m.id = l.id"+
+            "WHERE LOWER(m.name) LIKE LOWER(CONCAT('%', :movieName, '%'))")
     List<Object[]> findLanguageofMoviesByName(@Param("movieName") String movieName);
 
-    @Query(nativeQuery = true, value = " SELECT m.id AS movie_id, m.name AS movie_name, m.date AS movie_date, m.description AS movie_description, m.minute AS movie_duration, m.rating AS movie_rating, m.tagline AS movie_tagline, t.id AS theme_id, t.theme AS theme_theme FROM movie m LEFT JOIN theme t ON m.id = t.id WHERE LOWER(m.name) LIKE LOWER(CONCAT('%', :movieName, '%'))")
+    @Query(nativeQuery = true, value = "SELECT m.id, m.name, m.date, m.description, m.minute, m.rating, m.tagline, t.id, t.theme"+
+            "FROM movie m"+
+            "LEFT JOIN theme t ON m.id = t.id"+
+            "WHERE LOWER(m.name) LIKE LOWER(CONCAT('%', :movieName, '%'))")
     List<Object[]> findThemeofMoviesByName(@Param("movieName") String movieName);
 
 

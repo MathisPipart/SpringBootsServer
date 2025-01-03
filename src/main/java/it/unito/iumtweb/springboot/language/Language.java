@@ -7,13 +7,13 @@ import jakarta.persistence.*;
 public class Language {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // Génération automatique de l'ID
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // Automatically generates the ID
     private Long id;
 
-    @Column(nullable = false) // Le champ "name" est obligatoire
+    @Column(nullable = false) // The "type" field is mandatory
     private String type;
 
-    @Column(nullable = false) // Le champ "name" est obligatoire
+    @Column(nullable = false)
     private String language;
 
     /**

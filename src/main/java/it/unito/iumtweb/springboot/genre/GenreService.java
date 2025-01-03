@@ -14,18 +14,6 @@ public class GenreService {
     public GenreService(GenreRepository genreRepository) {
         this.genreRepository = genreRepository;
     }
-    
-    public Genre saveGenre(Genre genre) {
-        return genreRepository.save(genre);
-    }
-
-    public void deleteGenreById(Long id) {
-        genreRepository.deleteById(id);
-    }
-
-    public Optional<Genre> findGenreById(Long id) {
-        return genreRepository.findById(id);
-    }
 
     public List<Genre> findGenreByName(String name) {
         return genreRepository.findByName(name.trim());

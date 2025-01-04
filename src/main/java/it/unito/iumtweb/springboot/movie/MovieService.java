@@ -56,9 +56,11 @@ public class MovieService {
         return movieRepository.findThemeofMoviesByName(name);
     }
 
-    public List<Map<String, Object>> findMoviesWithGenresByGenre(String genreName) {
-        return movieRepository.findMoviesWithGenresByGenre(genreName);
+    public List<Map<String, Object>> getMoviesByGenre(String genre, int page, int size) {
+        int offset = page * size;
+        return movieRepository.findMoviesWithGenresByGenre(genre, size, offset);
     }
+
 
     public List<Map<String, Object>> findMoviesByDate(String date) {
         return movieRepository.findMoviesByDate(date);

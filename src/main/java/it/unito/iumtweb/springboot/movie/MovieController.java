@@ -117,14 +117,19 @@ public class MovieController {
     }
 
     @GetMapping("/findByGenre")
-    public ResponseEntity<?> findMoviesByGenre(@RequestParam String genre) {
-        List<Map<String, Object>> movies = movieService.findMoviesWithGenresByGenre(genre);
+    public ResponseEntity<?> findMoviesByGenre(
+            @RequestParam String genre,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size) {
+
+        List<Map<String, Object>> movies = movieService.getMoviesByGenre(genre, page, size);
 
         if (movies.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Aucun film trouvé pour ce genre.");
         }
         return ResponseEntity.ok(movies);
     }
+
 
     @GetMapping("/findByDate")
     public ResponseEntity<?> findMoviesByDate(@RequestParam String date) {
@@ -162,7 +167,7 @@ public class MovieController {
     @GetMapping("/topRated")
     public ResponseEntity<?> getTopRatedMovies(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "50") int size) {
+            @RequestParam(defaultValue = "20") int size) {
         List<Map<String, Object>> results = movieService.getTopRatedMovies(page, size);
         if (results == null || results.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Aucun film trouvé.");

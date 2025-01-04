@@ -160,13 +160,16 @@ public class MovieController {
     }
 
     @GetMapping("/topRated")
-    public ResponseEntity<?> getTopRatedMovies() {
-        List<Map<String, Object>> results = movieService.findTopRatedMovies();
+    public ResponseEntity<?> getTopRatedMovies(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "50") int size) {
+        List<Map<String, Object>> results = movieService.getTopRatedMovies(page, size);
         if (results == null || results.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Aucun film trouvé.");
         }
         return ResponseEntity.ok(results);
     }
+
 
 
 }

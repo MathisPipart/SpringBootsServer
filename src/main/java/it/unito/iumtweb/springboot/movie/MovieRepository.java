@@ -134,8 +134,9 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
             "LIMIT 50")
     List<Object[]> findMoviesByLanguageAndType(@Param("selectedLanguage") String selectedLanguage, @Param("selectedType") String selectedType);
 
-    @Query(nativeQuery = true, value ="SELECT m.id AS id, m.name AS name, m.date AS date, m.tagline AS tagline, " +
-            "m.description AS description, m.minute AS minute, m.rating AS rating, p.link AS link, " +
+    @Query(nativeQuery = true, value =
+            "SELECT m.id AS id, m.name AS name, m.date AS date, m.tagline AS tagline, " +
+                    "m.description AS description, m.minute AS minute, m.rating AS rating, p.link AS link, " +
                     "STRING_AGG(DISTINCT g.genre, ', ') AS genres " +
                     "FROM Movie m " +
                     "JOIN Genre g ON m.id = g.id " +
@@ -143,8 +144,8 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
                     "WHERE m.rating IS NOT NULL " +
                     "GROUP BY m.id, m.name, m.date, m.tagline, m.description, m.minute, m.rating, p.link " +
                     "ORDER BY m.rating DESC " +
-                    "LIMIT 50")
+                    "LIMIT :limit OFFSET :offset")
+    List<Map<String, Object>> findTopRatedMovies(int limit, int offset);
 
-    List<Map<String, Object>> findTopRatedMovies();
 
 }

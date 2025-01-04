@@ -72,7 +72,9 @@ public class MovieService {
         return movieRepository.findMoviesByLanguageAndType(language, type);
     }
 
-    public List<Map<String, Object>> findTopRatedMovies() {
-        return movieRepository.findTopRatedMovies();
+    public List<Map<String, Object>> getTopRatedMovies(int page, int size) {
+        int offset = page * size;
+        return movieRepository.findTopRatedMovies(size, offset);
     }
+
 }

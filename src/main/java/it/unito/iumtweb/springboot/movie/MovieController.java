@@ -27,14 +27,18 @@ public class MovieController {
     }
 
     @GetMapping("/findByKeyword")
-    public ResponseEntity<?> findMoviesByKeyword(@RequestParam String name) {
-        List<Map<String, Object>> movies = movieService.findMoviesByKeyword(name);
+    public ResponseEntity<?> findMoviesByKeyword(
+            @RequestParam String name,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size) {
+        List<Map<String, Object>> movies = movieService.findMoviesByKeyword(name, page, size);
         if (!movies.isEmpty()) {
             return ResponseEntity.ok(movies);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Aucun film trouvé.");
         }
     }
+
 
     @GetMapping("/findByNameMovieAndActors")
     public ResponseEntity<?> findByNameMovieAndActors(@RequestParam String name) {
@@ -117,8 +121,12 @@ public class MovieController {
     }
 
     @GetMapping("/findByGenre")
-    public ResponseEntity<?> findMoviesByGenre(@RequestParam String genre) {
-        List<Map<String, Object>> movies = movieService.findMoviesWithGenresByGenre(genre);
+    public ResponseEntity<?> findMoviesByGenre(
+            @RequestParam String genre,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size) {
+
+        List<Map<String, Object>> movies = movieService.getMoviesByGenre(genre, page, size);
 
         if (movies.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Aucun film trouvé pour ce genre.");
@@ -126,9 +134,13 @@ public class MovieController {
         return ResponseEntity.ok(movies);
     }
 
+
     @GetMapping("/findByDate")
-    public ResponseEntity<?> findMoviesByDate(@RequestParam String date) {
-        List<Map<String, Object>> movies = movieService.findMoviesByDate(date);
+    public ResponseEntity<?> findMoviesByDate(
+            @RequestParam String date,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size) {
+        List<Map<String, Object>> movies = movieService.findMoviesByDate(date, page, size);
 
         if (movies.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Aucun film trouvé pour cette date.");
@@ -136,6 +148,7 @@ public class MovieController {
 
         return ResponseEntity.ok(movies);
     }
+
 
 
     @GetMapping("/findByGenreAndDate")
@@ -150,8 +163,13 @@ public class MovieController {
     }
 
     @GetMapping("/findMoviesByLanguageAndType")
-    public ResponseEntity<?> findMoviesByLanguageAndType(@RequestParam String selectedLanguage, @RequestParam String selectedType) {
-        List<Object[]> results = movieService.findMoviesByLanguageAndType(selectedLanguage, selectedType);
+    public ResponseEntity<?> findMoviesByLanguageAndType(
+            @RequestParam String selectedLanguage,
+            @RequestParam String selectedType,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "50") int size) {
+        List<Object[]> results = movieService.findMoviesByLanguageAndType(selectedLanguage, selectedType, page, size);
+
         if (results.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Aucun film trouvé pour les critères donnés.");
         }
@@ -159,14 +177,18 @@ public class MovieController {
         return ResponseEntity.ok(results);
     }
 
+
     @GetMapping("/topRated")
-    public ResponseEntity<?> getTopRatedMovies() {
-        List<Map<String, Object>> results = movieService.findTopRatedMovies();
+    public ResponseEntity<?> getTopRatedMovies(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size) {
+        List<Map<String, Object>> results = movieService.getTopRatedMovies(page, size);
         if (results == null || results.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Aucun film trouvé.");
         }
         return ResponseEntity.ok(results);
     }
+
 
 
 }

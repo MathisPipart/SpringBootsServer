@@ -20,9 +20,11 @@ public class MovieService {
         return movieRepository.findByName(name);
     }
 
-    public List<Map<String, Object>> findMoviesByKeyword(String keyword) {
-        return movieRepository.findMoviesByNameKeyword(keyword);
+    public List<Map<String, Object>> findMoviesByKeyword(String keyword, int page, int size) {
+        int offset = page * size; // Calcul de l'offset
+        return movieRepository.findMoviesByNameKeyword(keyword, size, offset);
     }
+
 
     public List<Object[]> findMovieWithActors(String movieName) {
         return movieRepository.findMovieWithActorsByName(movieName);
@@ -56,23 +58,31 @@ public class MovieService {
         return movieRepository.findThemeofMoviesByName(name);
     }
 
-    public List<Map<String, Object>> findMoviesWithGenresByGenre(String genreName) {
-        return movieRepository.findMoviesWithGenresByGenre(genreName);
+    public List<Map<String, Object>> getMoviesByGenre(String genre, int page, int size) {
+        int offset = page * size;
+        return movieRepository.findMoviesWithGenresByGenre(genre, size, offset);
     }
 
-    public List<Map<String, Object>> findMoviesByDate(String date) {
-        return movieRepository.findMoviesByDate(date);
+
+    public List<Map<String, Object>> findMoviesByDate(String date, int page, int size) {
+        int offset = page * size;
+        return movieRepository.findMoviesByDate(date, size, offset);
     }
+
 
     public List<Map<String, Object>> findMoviesByGenreAndDate(String genre, String date) {
         return movieRepository.findMoviesByGenreAndDate(genre, date);
     }
 
-    public List<Object[]> findMoviesByLanguageAndType(String language, String type) {
-        return movieRepository.findMoviesByLanguageAndType(language, type);
+    public List<Object[]> findMoviesByLanguageAndType(String language, String type, int page, int size) {
+        int offset = page * size;
+        return movieRepository.findMoviesByLanguageAndType(language, type, size, offset);
     }
 
-    public List<Map<String, Object>> findTopRatedMovies() {
-        return movieRepository.findTopRatedMovies();
+
+    public List<Map<String, Object>> getTopRatedMovies(int page, int size) {
+        int offset = page * size;
+        return movieRepository.findTopRatedMovies(size, offset);
     }
+
 }

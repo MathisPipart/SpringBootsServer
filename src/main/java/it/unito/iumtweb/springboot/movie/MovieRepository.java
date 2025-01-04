@@ -20,8 +20,9 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
             "LEFT JOIN Poster p ON m.id = p.id " +
             "WHERE LOWER(m.name) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
             "ORDER BY m.id " +
-            "LIMIT 100")
-    List<Map<String, Object>> findMoviesByNameKeyword(@Param("keyword") String keyword);
+            "LIMIT :limit OFFSET :offset")
+    List<Map<String, Object>> findMoviesByNameKeyword(@Param("keyword") String keyword, @Param("limit") int limit, @Param("offset") int offset);
+
 
 
 
@@ -94,16 +95,18 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
 
 
 
-    @Query(nativeQuery = true, value = "SELECT m.id, m.name, m.date, m.tagline, m.description, m.minute, m.rating, p.link, " +
-            "STRING_AGG(DISTINCT g.genre, ', ') AS genres " +
-            "FROM movie m " +
-            "JOIN genre g ON m.id = g.id " +
-            "JOIN poster p ON m.id = p.id " +
-            "WHERE m.date = CAST(:date AS INTEGER) " +
-            "GROUP BY m.id, m.name, m.date, m.tagline, m.description, m.minute, m.rating, p.link " +
-            "ORDER BY m.id ASC " +
-            "LIMIT 50")
-    List<Map<String, Object>> findMoviesByDate(@Param("date") String date);
+    @Query(nativeQuery = true, value =
+            "SELECT m.id, m.name, m.date, m.tagline, m.description, m.minute, m.rating, p.link, " +
+                    "STRING_AGG(DISTINCT g.genre, ', ') AS genres " +
+                    "FROM movie m " +
+                    "JOIN genre g ON m.id = g.id " +
+                    "JOIN poster p ON m.id = p.id " +
+                    "WHERE m.date = CAST(:date AS INTEGER) " +
+                    "GROUP BY m.id, m.name, m.date, m.tagline, m.description, m.minute, m.rating, p.link " +
+                    "ORDER BY m.id ASC " +
+                    "LIMIT :limit OFFSET :offset")
+    List<Map<String, Object>> findMoviesByDate(@Param("date") String date, @Param("limit") int limit, @Param("offset") int offset);
+
 
 
     @Query(nativeQuery = true, value = "SELECT m.id, m.name, m.date, m.tagline, m.description, m.minute, m.rating, p.link, " +
@@ -124,17 +127,23 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
     List<Map<String, Object>> findMoviesByGenreAndDate(@Param("genre") String genre, @Param("date") String date);
 
 
-    @Query(nativeQuery = true, value = "SELECT m.id AS movie_id, m.name AS movie_name, m.date AS movie_date, " +
-            "m.description AS movie_description, m.minute AS movie_duration, m.rating AS movie_rating, " +
-            "m.tagline AS movie_tagline, l.id AS language_id, l.type AS language_type, l.language AS language_language, " +
-            "p.link AS poster_link " +
-            "FROM movie m " +
-            "LEFT JOIN language l ON m.id = l.id " +
-            "LEFT JOIN poster p ON m.id = p.id " +
-            "WHERE LOWER(l.language) = LOWER(:selectedLanguage) AND LOWER(l.type) = LOWER(:selectedType) " +
-            "ORDER BY m.id ASC " +
-            "LIMIT 50")
-    List<Object[]> findMoviesByLanguageAndType(@Param("selectedLanguage") String selectedLanguage, @Param("selectedType") String selectedType);
+    @Query(nativeQuery = true, value =
+            "SELECT m.id AS movie_id, m.name AS movie_name, m.date AS movie_date, " +
+                    "m.description AS movie_description, m.minute AS movie_duration, m.rating AS movie_rating, " +
+                    "m.tagline AS movie_tagline, l.id AS language_id, l.type AS language_type, l.language AS language_language, " +
+                    "p.link AS poster_link " +
+                    "FROM movie m " +
+                    "LEFT JOIN language l ON m.id = l.id " +
+                    "LEFT JOIN poster p ON m.id = p.id " +
+                    "WHERE LOWER(l.language) = LOWER(:selectedLanguage) AND LOWER(l.type) = LOWER(:selectedType) " +
+                    "ORDER BY m.id ASC " +
+                    "LIMIT :limit OFFSET :offset")
+    List<Object[]> findMoviesByLanguageAndType(
+            @Param("selectedLanguage") String selectedLanguage,
+            @Param("selectedType") String selectedType,
+            @Param("limit") int limit,
+            @Param("offset") int offset);
+
 
     @Query(nativeQuery = true, value =
             "SELECT m.id AS id, m.name AS name, m.date AS date, m.tagline AS tagline, " +

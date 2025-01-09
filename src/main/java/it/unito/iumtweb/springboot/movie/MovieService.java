@@ -85,4 +85,8 @@ public class MovieService {
         return movieRepository.findTopRatedMovies(size, offset);
     }
 
+    public List<String> findDistinctDates() {
+        return movieRepository.findDistinctDates();
+    }
+
 }

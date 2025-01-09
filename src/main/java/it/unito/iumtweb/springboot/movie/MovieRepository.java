@@ -159,5 +159,6 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
     List<Map<String, Object>> findTopRatedMovies(int limit, int offset);
 
 
-
+    @Query("SELECT DISTINCT m.date FROM Movie m WHERE m.date <= 2024 ORDER BY m.date DESC")
+    List<String> findDistinctDates();
 }

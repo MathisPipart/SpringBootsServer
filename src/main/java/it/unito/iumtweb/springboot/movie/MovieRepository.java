@@ -18,8 +18,9 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
             "m.description AS description, m.minute AS minute, m.rating AS rating, p.link AS link " +
             "FROM Movie m " +
             "LEFT JOIN Poster p ON m.id = p.id " +
-            "WHERE LOWER(m.name) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
-            "ORDER BY m.id " +
+            "WHERE m.rating IS NOT NULL " +
+            "AND LOWER(m.name) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
+            "ORDER BY m.rating DESC, m.id ASC " +
             "LIMIT :limit OFFSET :offset")
     List<Map<String, Object>> findMoviesByNameKeyword(@Param("keyword") String keyword, @Param("limit") int limit, @Param("offset") int offset);
 

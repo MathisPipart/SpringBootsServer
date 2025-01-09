@@ -1,10 +1,16 @@
+/**
+ * Initializes the application interface and event handlers for user interactions.
+ */
 function init() {
-    // Ajoute un gestionnaire d'événements pour le changement du type
+    /**
+     * Adds an event listener for changes in the type selection dropdown.
+     * Updates the label text based on the selected type.
+     */
     document.getElementById('type').addEventListener('change', function () {
-        const selectedType = this.value; // Récupère la valeur sélectionnée (film ou actor)
+        const selectedType = this.value;
         const nameLabel = document.getElementById('nameLabel');
 
-        // Change le libellé en fonction du type sélectionné
+        // Update the label text based on the selected type
         switch (selectedType) {
             case 'movieDetails':
                 nameLabel.textContent = 'Movie Details:';
@@ -79,12 +85,15 @@ function init() {
 
     });
 
-    // Ajoute un gestionnaire d'événements pour la soumission du formulaire
+    /**
+     * Adds an event listener for the form submission.
+     * Prevents page reload and performs a search based on the selected type and input name.
+     */
     document.getElementById('xForm').addEventListener('submit', function (e) {
-        e.preventDefault(); // Empêche le rechargement de la page
+        e.preventDefault(); // Prevent reloading of the page
 
-        const type = document.getElementById('type').value; // Type (film ou actor)
-        const name = document.getElementById('name').value; // Nom saisi
+        const type = document.getElementById('type').value;
+        const name = document.getElementById('name').value;
 
         if (!name) {
             alert('Veuillez saisir un nom pour votre recherche.');
@@ -158,39 +167,48 @@ function init() {
                 searchMoviesByGenreAndDate();
                 break;
             default:
-                alert("Type de recherche inconnu.");
+                alert("Unknown search type.");
                 break;
         }
 
     });
  }
 
-
+/**
+ * Fetches the details of a movie by its ID from the API and displays the results.
+ *
+ * @param {string} id - The ID of the movie to fetch.
+ */
 function searchMovieDetails(id) {
-    const url = `http://localhost:8082/detailsMovies/findById/${id}`; // URL complète de l'API
+    const url = `http://localhost:8082/detailsMovies/findById/${id}`;
 
     fetch(url)
         .then(response => {
             if (response.ok) {
                 return response.json();
             } else {
-                throw new Error(`Film avec l'id ${id} non trouvé (status: ${response.status})`);
+                throw new Error(`Movie with id ${id} not found (status: ${response.status})`);
             }
         })
         .then(data => {
-            console.log("Détails du film :", data);
+            console.log("Movie details :", data);
             displayMovieDetails(data);
         })
         .catch(error => {
-            console.error("Erreur lors de la récupération des détails du film :", error);
+            console.error("Error while loading the details of the movie :", error);
         });
 }
 
+/**
+ * Displays the details of a movie in the "results" container.
+ *
+ * @param {Object} movie - The movie object containing details such as name, date, rating, etc.
+ */
 function displayMovieDetails(movie) {
     const container = document.getElementById('results');
 
     if (!container) {
-        console.error("Conteneur avec l'ID 'results' non trouvé dans le DOM.");
+        console.error("Container with the ID 'results' not found in the DOM.");
         return;
     }
 
@@ -214,18 +232,22 @@ function displayMovieDetails(movie) {
     container.innerHTML = content;
 }
 
-
+/**
+ * Searches for movies by keyword and displays the results.
+ *
+ * @param {string} name - The keyword to search for in movie names.
+ */
 function searchFilm(name) {
     fetch('/movies/findByKeyword?name=' + encodeURIComponent(name))
         .then(response => {
             if (!response.ok) {
-                throw new Error("Erreur lors de la récupération des données.");
+                throw new Error("Error while retrieving the data.");
             }
             return response.json();
         })
         .then(data => {
             if (data.length === 0) {
-                document.getElementById("results").textContent = "Aucun film trouvé.";
+                document.getElementById("results").textContent = "No movie found.";
             } else {
                 const results = data.map(movie => `
                     <div>
@@ -244,24 +266,27 @@ function searchFilm(name) {
         })
         .catch(error => {
             console.error("Erreur :", error);
-            document.getElementById("results").textContent = "Erreur lors de la récupération des données.";
+            document.getElementById("results").textContent = "Error while retrieving the data.";
         });
 }
 
+/**
+ * Searches for actors by keyword and displays the results.
+ *
+ * @param {string} name - The keyword to search for in actor names.
+ */
 function searchActor(name) {
-    // Requête pour rechercher des acteurs
     fetch('/actors/findByKeyword?name=' + encodeURIComponent(name))
         .then(response => {
             if (!response.ok) {
-                throw new Error("Erreur lors de la récupération des données.");
+                throw new Error("Error while retrieving the data.");
             }
             return response.json();
         })
         .then(data => {
             if (data.length === 0) {
-                document.getElementById("results").textContent = "Aucun acteur/rice trouvé.";
+                document.getElementById("results").textContent = "No actors found.";
             } else {
-                // Construire le HTML pour afficher les acteurs
                 const results = data.map(actor => `
                     <div>
                         <h3>${actor.name}</h3>
@@ -274,24 +299,27 @@ function searchActor(name) {
         })
         .catch(error => {
             console.error("Erreur :", error);
-            document.getElementById("results").textContent = "Erreur lors de la récupération des données.";
+            document.getElementById("results").textContent = "Error while retrieving the data.";
         });
 }
 
+/**
+ * Searches for countries by keyword and displays the results.
+ *
+ * @param {string} name - The keyword to search for in country names.
+ */
 function searchCountry(name) {
-    // Requête pour rechercher des pays par mot-clé
     fetch('/countries/findByKeyword?name=' + encodeURIComponent(name))
         .then(response => {
             if (!response.ok) {
-                throw new Error("Erreur lors de la récupération des données.");
+                throw new Error("Error while retrieving the data.");
             }
             return response.json();
         })
         .then(data => {
             if (data.length === 0) {
-                document.getElementById("results").textContent = "Aucun pays trouvé.";
+                document.getElementById("results").textContent = "No countries found.";
             } else {
-                // Construire le HTML pour afficher les pays avec leur ID
                 const results = data.map(country => `
                     <div>
                         <h3>Pays: ${country.country}</h3>
@@ -303,24 +331,27 @@ function searchCountry(name) {
         })
         .catch(error => {
             console.error("Erreur :", error);
-            document.getElementById("results").textContent = "Erreur lors de la récupération des données.";
+            document.getElementById("results").textContent = "Error while retrieving the data.";
         });
 }
 
+/**
+ * Searches for crew members by keyword and displays the results.
+ *
+ * @param {string} name - The keyword to search for in crew member names.
+ */
 function searchCrew(name) {
-    // Requête pour rechercher des pays par mot-clé
     fetch('/crews/findByKeyword?name=' + encodeURIComponent(name))
         .then(response => {
             if (!response.ok) {
-                throw new Error("Erreur lors de la récupération des données.");
+                throw new Error("Error while retrieving the data.");
             }
             return response.json();
         })
         .then(data => {
             if (data.length === 0) {
-                document.getElementById("results").textContent = "Aucun crew trouvé.";
+                document.getElementById("results").textContent = "No crew found.";
             } else {
-                // Construire le HTML pour afficher les pays avec leur ID
                 const results = data.map(crew => `
                     <div>
                         <h3>Name: ${crew.name}</h3>
@@ -333,24 +364,27 @@ function searchCrew(name) {
         })
         .catch(error => {
             console.error("Erreur :", error);
-            document.getElementById("results").textContent = "Erreur lors de la récupération des données.";
+            document.getElementById("results").textContent = "Error while retrieving the data.";
         });
 }
 
+/**
+ * Searches for genres by keyword and displays the results.
+ *
+ * @param {string} name - The keyword to search for in genre names.
+ */
 function searchGenre(name) {
-    // Requête pour rechercher des pays par mot-clé
     fetch('/genres/findByKeyword?name=' + encodeURIComponent(name))
         .then(response => {
             if (!response.ok) {
-                throw new Error("Erreur lors de la récupération des données.");
+                throw new Error("Error while retrieving the data.");
             }
             return response.json();
         })
         .then(data => {
             if (data.length === 0) {
-                document.getElementById("results").textContent = "Aucun pays trouvé.";
+                document.getElementById("results").textContent = "No country found.";
             } else {
-                // Construire le HTML pour afficher les pays avec leur ID
                 const results = data.map(genre => `
                     <div>
                         <h3>Genre: ${genre.genre}</h3>
@@ -362,24 +396,27 @@ function searchGenre(name) {
         })
         .catch(error => {
             console.error("Erreur :", error);
-            document.getElementById("results").textContent = "Erreur lors de la récupération des données.";
+            document.getElementById("results").textContent = "Error while retrieving the data.";
         });
 }
 
+/**
+ * Searches for languages by keyword and displays the results.
+ *
+ * @param {string} name - The keyword to search for in language names.
+ */
 function searchLanguage(name) {
-    // Requête pour rechercher des pays par mot-clé
     fetch('/languages/findByKeyword?name=' + encodeURIComponent(name))
         .then(response => {
             if (!response.ok) {
-                throw new Error("Erreur lors de la récupération des données.");
+                throw new Error("Error while retrieving the data.");
             }
             return response.json();
         })
         .then(data => {
             if (data.length === 0) {
-                document.getElementById("results").textContent = "Aucun pays trouvé.";
+                document.getElementById("results").textContent = "No language found.";
             } else {
-                // Construire le HTML pour afficher les pays avec leur ID
                 const results = data.map(language => `
                     <div>
                         <h3>Language: ${language.language}</h3>
@@ -392,22 +429,26 @@ function searchLanguage(name) {
         })
         .catch(error => {
             console.error("Erreur :", error);
-            document.getElementById("results").textContent = "Erreur lors de la récupération des données.";
+            document.getElementById("results").textContent = "Error while retrieving the data.";
         });
 }
 
+/**
+ * Searches for posters by keyword and displays the results.
+ *
+ * @param {string} name - The keyword to search for in poster links.
+ */
 function searchPoster(name) {
-    // Requête pour rechercher des pays par mot-clé
     fetch('/posters/findByKeyword?name=' + encodeURIComponent(name))
         .then(response => {
             if (!response.ok) {
-                throw new Error("Erreur lors de la récupération des données.");
+                throw new Error("Error while retrieving the data.");
             }
             return response.json();
         })
         .then(data => {
             if (data.length === 0) {
-                document.getElementById("results").textContent = "Aucun lien trouvé.";
+                document.getElementById("results").textContent = "No link found";
             } else {
                 // Construire le HTML pour afficher les pays avec leur ID
                 const results = data.map(poster => `
@@ -421,24 +462,27 @@ function searchPoster(name) {
         })
         .catch(error => {
             console.error("Erreur :", error);
-            document.getElementById("results").textContent = "Erreur lors de la récupération des données.";
+            document.getElementById("results").textContent = "Error while retrieving the data.";
         });
 }
 
+/**
+ * Searches for releases by keyword and displays the results.
+ *
+ * @param {string} name - The keyword to search for in release information.
+ */
 function searchRelease(name) {
-    // Requête pour rechercher des pays par mot-clé
     fetch('/releases/findByKeyword?name=' + encodeURIComponent(name))
         .then(response => {
             if (!response.ok) {
-                throw new Error("Erreur lors de la récupération des données.");
+                throw new Error("Error while retrieving the data.");
             }
             return response.json();
         })
         .then(data => {
             if (data.length === 0) {
-                document.getElementById("results").textContent = "Aucun lien trouvé.";
+                document.getElementById("results").textContent = "No releases found.";
             } else {
-                // Construire le HTML pour afficher les pays avec leur ID
                 const results = data.map(release => `
                     <div>
                         <h3>ID: ${release.id}</h3>
@@ -453,24 +497,27 @@ function searchRelease(name) {
         })
         .catch(error => {
             console.error("Erreur :", error);
-            document.getElementById("results").textContent = "Erreur lors de la récupération des données.";
+            document.getElementById("results").textContent = "Error while retrieving the data.";
         });
 }
 
+/**
+ * Searches for studios by keyword and displays the results.
+ *
+ * @param {string} name - The keyword to search for in studio names.
+ */
 function searchStudio(name) {
-    // Requête pour rechercher des pays par mot-clé
     fetch('/studios/findByKeyword?name=' + encodeURIComponent(name))
         .then(response => {
             if (!response.ok) {
-                throw new Error("Erreur lors de la récupération des données.");
+                throw new Error("Error while retrieving the data.");
             }
             return response.json();
         })
         .then(data => {
             if (data.length === 0) {
-                document.getElementById("results").textContent = "Aucun studio trouvé.";
+                document.getElementById("results").textContent = "No studios found.";
             } else {
-                // Construire le HTML pour afficher les pays avec leur ID
                 const results = data.map(studio => `
                     <div>
                         <h3>Studio: ${studio.studio}</h3>
@@ -482,24 +529,27 @@ function searchStudio(name) {
         })
         .catch(error => {
             console.error("Erreur :", error);
-            document.getElementById("results").textContent = "Erreur lors de la récupération des données.";
+            document.getElementById("results").textContent = "Error while retrieving the data.";
         });
 }
 
+/**
+ * Searches for themes by keyword and displays the results.
+ *
+ * @param {string} name - The keyword to search for in theme names.
+ */
 function searchTheme(name) {
-    // Requête pour rechercher des pays par mot-clé
     fetch('/themes/findByKeyword?name=' + encodeURIComponent(name))
         .then(response => {
             if (!response.ok) {
-                throw new Error("Erreur lors de la récupération des données.");
+                throw new Error("Error while retrieving the data.");
             }
             return response.json();
         })
         .then(data => {
             if (data.length === 0) {
-                document.getElementById("results").textContent = "Aucun studio trouvé.";
+                document.getElementById("results").textContent = "No themes found.";
             } else {
-                // Construire le HTML pour afficher les pays avec leur ID
                 const results = data.map(theme => `
                     <div>
                         <h3>Theme: ${theme.theme}</h3>
@@ -511,12 +561,16 @@ function searchTheme(name) {
         })
         .catch(error => {
             console.error("Erreur :", error);
-            document.getElementById("results").textContent = "Erreur lors de la récupération des données.";
+            document.getElementById("results").textContent = "Error while retrieving the data.";
         });
 }
 
+/**
+ * Fetches the 50 top-rated movies from the API and displays the results.
+ *
+ * @param {string} name - The keyword to search for in movie names.
+ */
 function searchTopRatedMovies(name) {
-    // Fetch the 50 top-rated movies from the API endpoint
     fetch('/movies/topRated?name=' + encodeURIComponent(name))
         .then(response => {
             if (!response.ok) {
@@ -551,21 +605,25 @@ function searchTopRatedMovies(name) {
         });
 }
 
+/**
+ * Searches for a movie by name and retrieves its associated actors.
+ *
+ * @param {string} name - The name of the movie to search for.
+ */
 function searchMovieWithActors(name) {
     fetch('/movies/findByNameMovieAndActors?name=' + encodeURIComponent(name))
         .then(response => {
             if (!response.ok) {
-                throw new Error("Film non trouvé ou erreur lors de la récupération.");
+                throw new Error("Movie not found or error retrieving it");
             }
             return response.json();
         })
         .then(data => {
             if (data.length === 0) {
-                document.getElementById("results").textContent = "Aucun film trouvé.";
+                document.getElementById("results").textContent = "No movie found.";
                 return;
             }
 
-            // Grouper les résultats par film (par movie_id)
             const movies = {};
             data.forEach(row => {
                 const movieId = row[0]; // movie_id
@@ -582,7 +640,6 @@ function searchMovieWithActors(name) {
                     };
                 }
                 if (row[7]) {
-                    // Ajouter l'acteur à la liste des acteurs pour ce film
                     movies[movieId].actors.push({
                         name: row[7],
                         role: row[8],
@@ -590,7 +647,6 @@ function searchMovieWithActors(name) {
                 }
             });
 
-            // Construire le HTML pour afficher les films et leurs acteurs
             const resultsHTML = Object.values(movies)
                 .map(movie => {
                     const actorList = movie.actors
@@ -617,28 +673,33 @@ function searchMovieWithActors(name) {
         })
         .catch(error => {
             console.error("Erreur :", error);
-            document.getElementById("results").textContent = "Erreur lors de la recherche du film.";
+            document.getElementById("results").textContent = "Error while retrieving the data.";
         });
 }
 
+
+/**
+ * Searches for a movie by name and retrieves its associated posters.
+ *
+ * @param {string} name - The name of the movie to search for.
+ */
 function searchMovieWithPosters(name) {
     fetch('/movies/findPostersofMovies?name=' + encodeURIComponent(name))
         .then(response => {
             if (!response.ok) {
-                throw new Error("Film non trouvé ou erreur lors de la récupération.");
+                throw new Error("Movie not found or error retrieving it");
             }
             return response.json();
         })
         .then(data => {
             if (data.length === 0) {
-                document.getElementById("results").textContent = "Aucun film trouvé.";
+                document.getElementById("results").textContent = "No movies found.";
                 return;
             }
 
-            // Grouper les résultats par film (par movie_id)
             const movies = {};
             data.forEach(row => {
-                const movieId = row[0]; // movie_id
+                const movieId = row[0];
                 if (!movies[movieId]) {
                     movies[movieId] = {
                         id: movieId,
@@ -648,12 +709,11 @@ function searchMovieWithPosters(name) {
                         duration: row[4],
                         rating: row[5],
                         tagline: row[6],
-                        posterLink: row[8], // Lien du poster
+                        posterLink: row[8],
                     };
                 }
             });
 
-            // Construire le HTML pour afficher les films et leurs posters
             const resultsHTML = Object.values(movies)
                 .map(movie => {
                     return `
@@ -674,28 +734,32 @@ function searchMovieWithPosters(name) {
         })
         .catch(error => {
             console.error("Erreur :", error);
-            document.getElementById("results").textContent = "Erreur lors de la recherche du film.";
+            document.getElementById("results").textContent = "Error while searching the movie.";
         });
 }
 
+/**
+ * Searches for a movie by name and retrieves its associated studios.
+ *
+ * @param {string} name - The name of the movie to search for.
+ */
 function searchMovieWithStudios(name) {
     fetch('/movies/findStudiosofMovies?name=' + encodeURIComponent(name))
         .then(response => {
             if (!response.ok) {
-                throw new Error("Studio non trouvé ou erreur lors de la récupération.");
+                throw new Error("Studio not found or error while retrieving it.");
             }
             return response.json();
         })
         .then(data => {
             if (data.length === 0) {
-                document.getElementById("results").textContent = "Aucun studio trouvé.";
+                document.getElementById("results").textContent = "No movies found.";
                 return;
             }
 
-            // Grouper les résultats par film (par movie_id)
             const movies = {};
             data.forEach(row => {
-                const movieId = row[0]; // movie_id
+                const movieId = row[0];
                 if (!movies[movieId]) {
                     movies[movieId] = {
                         id: movieId,
@@ -709,14 +773,12 @@ function searchMovieWithStudios(name) {
                     };
                 }
                 if (row[8]) {
-                    // Ajouter le studio à la liste des studios pour ce film
                     movies[movieId].studios.push({
                         studio: row[8]
                     });
                 }
             });
 
-            // Construire le HTML pour afficher les films et leurs studios
             const resultsHTML = Object.values(movies)
                 .map(movie => {
                     const studioList = movie.studios
@@ -742,25 +804,29 @@ function searchMovieWithStudios(name) {
         })
         .catch(error => {
             console.error("Erreur :", error);
-            document.getElementById("results").textContent = "Erreur lors de la recherche du studio.";
+            document.getElementById("results").textContent = "Error while searching for the studio";
         });
 }
 
+/**
+ * Searches for movies with their associated countries by name.
+ *
+ * @param {string} name - The name of the movie to search for.
+ */
 function searchMovieWithCountries(name) {
     fetch('/movies/findCountriesofMovies?name=' + encodeURIComponent(name))
         .then(response => {
             if (!response.ok) {
-                throw new Error("Pays non trouvé ou erreur lors de la récupération.");
+                throw new Error("Country not found or error during retrieval.");
             }
             return response.json();
         })
         .then(data => {
             if (data.length === 0) {
-                document.getElementById("results").textContent = "Aucun pays trouvé.";
+                document.getElementById("results").textContent = "No countries found.";
                 return;
             }
 
-            // Grouper les résultats par film (par movie_id)
             const movies = {};
             data.forEach(row => {
                 const movieId = row[0]; // movie_id
@@ -777,14 +843,12 @@ function searchMovieWithCountries(name) {
                     };
                 }
                 if (row[8]) {
-                    // Ajouter le pays à la liste des pays pour ce film
                     movies[movieId].countries.push({
                         country: row[8]
                     });
                 }
             });
 
-            // Construire le HTML pour afficher les films et leurs pays
             const resultsHTML = Object.values(movies)
                 .map(movie => {
                     const countryList = movie.countries
@@ -810,28 +874,32 @@ function searchMovieWithCountries(name) {
         })
         .catch(error => {
             console.error("Erreur :", error);
-            document.getElementById("results").textContent = "Erreur lors de la recherche du studio.";
+            document.getElementById("results").textContent = "Error during country search.";
         });
 }
 
+/**
+ * Searches for movies with their associated crew members by name.
+ *
+ * @param {string} name - The name of the movie to search for.
+ */
 function searchMovieWithCrew(name) {
     fetch('/movies/findCrewofMovies?name=' + encodeURIComponent(name))
         .then(response => {
             if (!response.ok) {
-                throw new Error("Personnel non trouvé ou erreur lors de la récupération.");
+                throw new Error("Crew not found or error during retrieval.");
             }
             return response.json();
         })
         .then(data => {
             if (data.length === 0) {
-                document.getElementById("results").textContent = "Aucun personnel trouvé.";
+                document.getElementById("results").textContent = "No crew members found.";
                 return;
             }
 
-            // Grouper les résultats par film (par movie_id)
             const movies = {};
             data.forEach(row => {
-                const movieId = row[0]; // movie_id
+                const movieId = row[0];
                 if (!movies[movieId]) {
                     movies[movieId] = {
                         id: movieId,
@@ -845,15 +913,13 @@ function searchMovieWithCrew(name) {
                     };
                 }
                 if (row[8] && row[9]) {
-                    // Ajouter le membre de l'équipe à la liste
-                    movies[movieId].crew.push(`${row[9]} as ${row[8]}`); // Nom + rôle
+                    movies[movieId].crew.push(`${row[9]} as ${row[8]}`);
                 }
             });
 
-            // Construire le HTML pour afficher les films et leur personnel
             const resultsHTML = Object.values(movies)
                 .map(movie => {
-                    const crewList = movie.crew.join(', <span style="margin-left: 2em;"></span>'); // Séparer les membres par une virgule
+                    const crewList = movie.crew.join(', <span style="margin-left: 2em;"></span>');
                     return `
                         <div>
                             <h3>${movie.name} (${movie.date})</h3>
@@ -872,28 +938,32 @@ function searchMovieWithCrew(name) {
         })
         .catch(error => {
             console.error("Erreur :", error);
-            document.getElementById("results").textContent = "Erreur lors de la recherche du studio.";
+            document.getElementById("results").textContent = "Error during crew search.";
         });
 }
 
+/**
+ * Searches for movies with their associated genres by name.
+ *
+ * @param {string} name - The name of the movie to search for.
+ */
 function searchMovieWithGenre(name) {
     fetch('/movies/findGenreofMovies?name=' + encodeURIComponent(name))
         .then(response => {
             if (!response.ok) {
-                throw new Error("Genre non trouvé ou erreur lors de la récupération.");
+                throw new Error("Genre not found or error during retrieval.");
             }
             return response.json();
         })
         .then(data => {
             if (data.length === 0) {
-                document.getElementById("results").textContent = "Aucun genre trouvé.";
+                document.getElementById("results").textContent = "No genres found.";
                 return;
             }
 
-            // Grouper les résultats par film (par movie_id)
             const movies = {};
             data.forEach(row => {
-                const movieId = row[0]; // movie_id
+                const movieId = row[0];
                 if (!movies[movieId]) {
                     movies[movieId] = {
                         id: movieId,
@@ -907,14 +977,12 @@ function searchMovieWithGenre(name) {
                     };
                 }
                 if (row[8]) {
-                    // Ajouter le pays à la liste des genres pour ce film
                     movies[movieId].genres.push({
                         genre: row[8]
                     });
                 }
             });
 
-            // Construire le HTML pour afficher les films et leurs pays
             const resultsHTML = Object.values(movies)
                 .map(movie => {
                     const genreList = movie.genres
@@ -940,28 +1008,32 @@ function searchMovieWithGenre(name) {
         })
         .catch(error => {
             console.error("Erreur :", error);
-            document.getElementById("results").textContent = "Erreur lors de la recherche du genre.";
+            document.getElementById("results").textContent = "Error during genre search.";
         });
 }
 
+/**
+ * Fetches and displays movies along with their associated languages by the provided movie name.
+ *
+ * @param {string} name - The name of the movie to search for.
+ */
 function searchMovieWithLanguage(name) {
     fetch('/movies/findLanguageofMovies?name=' + encodeURIComponent(name))
         .then(response => {
             if (!response.ok) {
-                throw new Error("Langue non trouvé ou erreur lors de la récupération.");
+                throw new Error("Language not found or error during retrieval.");
             }
             return response.json();
         })
         .then(data => {
             if (data.length === 0) {
-                document.getElementById("results").textContent = "Aucune langue trouvé.";
+                document.getElementById("results").textContent = "No languages found.";
                 return;
             }
 
-            // Grouper les résultats par film (par movie_id)
             const movies = {};
             data.forEach(row => {
-                const movieId = row[0]; // movie_id
+                const movieId = row[0];
                 if (!movies[movieId]) {
                     movies[movieId] = {
                         id: movieId,
@@ -975,7 +1047,6 @@ function searchMovieWithLanguage(name) {
                     };
                 }
                 if (row[8] && row[9]) {
-                    // Ajouter la langue à la liste des langues pour ce film
                     movies[movieId].languages.push({
                         type: row[8],
                         language: row[9],
@@ -983,7 +1054,6 @@ function searchMovieWithLanguage(name) {
                 }
             });
 
-            // Construire le HTML pour afficher les films et leurs langues
             const resultsHTML = Object.values(movies)
                 .map(movie => {
                     const languageList = movie.languages
@@ -1009,28 +1079,32 @@ function searchMovieWithLanguage(name) {
         })
         .catch(error => {
             console.error("Erreur :", error);
-            document.getElementById("results").textContent = "Erreur lors de la recherche de la langue.";
+            document.getElementById("results").textContent = "Error during language search.";
         });
 }
 
+/**
+ * Fetches and displays movies along with their associated themes by the provided movie name.
+ *
+ * @param {string} name - The name of the movie to search for.
+ */
 function searchMovieWithTheme(name) {
     fetch('/movies/findThemeofMovies?name=' + encodeURIComponent(name))
         .then(response => {
             if (!response.ok) {
-                throw new Error("Theme non trouvé ou erreur lors de la récupération.");
+                throw new Error("Theme not found or error during retrieval.");
             }
             return response.json();
         })
         .then(data => {
             if (data.length === 0) {
-                document.getElementById("results").textContent = "Aucun theme trouvé.";
+                document.getElementById("results").textContent = "No themes found.";
                 return;
             }
 
-            // Grouper les résultats par film (par movie_id)
             const movies = {};
             data.forEach(row => {
-                const movieId = row[0]; // movie_id
+                const movieId = row[0];
                 if (!movies[movieId]) {
                     movies[movieId] = {
                         id: movieId,
@@ -1044,12 +1118,10 @@ function searchMovieWithTheme(name) {
                     };
                 }
                 if (row[8]) {
-                    // Ajouter le theme à la liste des themes pour ce film
                     movies[movieId].themes.push(`${row[8]}`);
                 }
             });
 
-            // Construire le HTML pour afficher les films et leurs themes
             const resultsHTML = Object.values(movies)
                 .map(movie => {
                     const themeList = movie.themes.join(', <span style="margin-left: 2em;"></span>');
@@ -1071,23 +1143,26 @@ function searchMovieWithTheme(name) {
         })
         .catch(error => {
             console.error("Erreur :", error);
-            document.getElementById("results").textContent = "Erreur lors de la recherche du theme.";
+            document.getElementById("results").textContent = "Error during theme search.";
         });
 }
 
-
+/**
+ * Fetches and displays movies by the provided genre.
+ *
+ * @param {string} genre - The genre to search for movies.
+ */
 function searchMoviesByGenre(genre) {
     fetch('/movies/findByGenre?genre=' + encodeURIComponent(genre))
         .then(response => {
             if (!response.ok) {
-                throw new Error("Aucun film trouvé pour ce genre.");
+                throw new Error("No movies found for this genre.");
             }
             return response.json();
         })
         .then(data => {
-            console.log("Données reçues :", data); // Inspecter les données
             if (data.length === 0) {
-                document.getElementById("results").textContent = "Aucun film trouvé.";
+                document.getElementById("results").textContent = "No movies found.";
                 return;
             }
 
@@ -1108,27 +1183,31 @@ function searchMoviesByGenre(genre) {
         })
         .catch(error => {
             console.error("Erreur :", error);
-            document.getElementById("results").textContent = "Erreur lors de la récupération des films.";
+            document.getElementById("results").textContent = "Error during movie retrieval.";
         });
 }
 
-
+/**
+ * Fetches and displays movies by the provided release date.
+ *
+ * @param {string} date - The release date in the format YYYY to search for movies.
+ */
 function searchMoviesByDate(date) {
     if (!/^\d{4}$/.test(date)) {
-        document.getElementById("results").textContent = "La date saisie est invalide. Format attendu : YYYY.";
+        document.getElementById("results").textContent = "Invalid date format. Expected format: YYYY.";
         return;
     }
 
     fetch('/movies/findByDate?date=' + encodeURIComponent(date))
         .then(response => {
             if (!response.ok) {
-                throw new Error("Aucun film trouvé pour cette date.");
+                throw new Error("No movies found for this date.");
             }
             return response.json();
         })
         .then(data => {
             if (data.length === 0) {
-                document.getElementById("results").textContent = "Aucun film trouvé.";
+                document.getElementById("results").textContent = "No movies found.";
                 return;
             }
 
@@ -1149,10 +1228,16 @@ function searchMoviesByDate(date) {
         })
         .catch(error => {
             console.error("Erreur :", error);
-            document.getElementById("results").textContent = "Erreur lors de la récupération des films.";
+            document.getElementById("results").textContent = "Error retrieving movies.";
         });
 }
 
+/**
+ * Fetches and displays movies filtered by both genre and release date.
+ *
+ * @param {string} genre - The genre to search for movies.
+ * @param {string} date - The release date in the format YYYY to search for movies.
+ */
 function searchMoviesByGenreAndDate() {
     const genre = 'Comedy';
     const date = '2023';
@@ -1160,13 +1245,13 @@ function searchMoviesByGenreAndDate() {
     fetch(`/movies/findByGenreAndDate?genre=${encodeURIComponent(genre)}&date=${encodeURIComponent(date)}`)
         .then(response => {
             if (!response.ok) {
-                throw new Error("Aucun film trouvé pour ces critères.");
+                throw new Error("No movies found for the given criteria.");
             }
             return response.json();
         })
         .then(data => {
             if (data.length === 0) {
-                document.getElementById("results").textContent = "Aucun film trouvé.";
+                document.getElementById("results").textContent = "No movies found.";
                 return;
             }
 
@@ -1188,13 +1273,14 @@ function searchMoviesByGenreAndDate() {
         })
         .catch(error => {
             console.error("Erreur :", error);
-            document.getElementById("results").textContent = "Erreur lors de la récupération des films.";
+            document.getElementById("results").textContent = "Error retrieving movies.";
         });
 }
 
-
-
-
+/**
+ * Initializes the language and type selection for filtering movies.
+ * Automatically populates the dropdowns with available languages and types from the API.
+ */
 document.addEventListener("DOMContentLoaded", () => {
     const typeSelect = document.getElementById("type-select");
     const selectedTypeDisplay = document.getElementById("selected-type");
@@ -1206,27 +1292,25 @@ document.addEventListener("DOMContentLoaded", () => {
         try {
             const response = await fetch("/languages/distinctLanguages");
             if (!response.ok) {
-                throw new Error("Erreur lors de la récupération des langues.");
+                throw new Error("Error retrieving languages.");
             }
             const languages = await response.json();
-            console.log("Langues récupérées :", languages); // Debug
             populateLanguageSelect(languages);
         } catch (error) {
-            console.error("Erreur :", error);
-            languageSelect.innerHTML = '<option value="">Erreur de chargement</option>';
+            console.error("Error :", error);
+            languageSelect.innerHTML = '<option value="">Loading error</option>';
         }
 
         try {
             const response = await fetch("/languages/distinctTypes");
             if (!response.ok) {
-                throw new Error("Erreur lors de la récupération des types.");
+                throw new Error("Error retrieving types.");
             }
             const types = await response.json();
-            console.log("Types récupérés :", types); // Debug
             populateTypeSelect(types);
         } catch (error) {
-            console.error("Erreur :", error);
-            typeSelect.innerHTML = '<option value="">Erreur de chargement</option>';
+            console.error("Error :", error);
+            typeSelect.innerHTML = '<option value="">Loading error</option>';
         }
     }
 
@@ -1253,12 +1337,12 @@ document.addEventListener("DOMContentLoaded", () => {
         const selectedLanguage = languageSelect.value;
         const selectedType = typeSelect.value;
         selectedLanguageDisplay.textContent = selectedLanguage
-            ? `Langue sélectionnée : ${selectedLanguage}`
-            : "Langue sélectionnée : aucune";
+            ? `Selected language : ${selectedLanguage}`
+            : "Selected language : none";
 
         selectedTypeDisplay.textContent = selectedType
-            ? `Type sélectionné : ${selectedType}`
-            : "Type sélectionné : aucun";
+            ? `Selected type : ${selectedType}`
+            : "Selected type : none";
 
         searchMovies(selectedLanguage, selectedType);
     });
@@ -1266,24 +1350,29 @@ document.addEventListener("DOMContentLoaded", () => {
     fetchLanguages();
 });
 
+/**
+ * Fetches and displays movies filtered by selected language and type.
+ *
+ * @param {string} selectedLanguage - The language filter for movies.
+ * @param {string} selectedType - The type filter for movies.
+ */
 function searchMovies(selectedLanguage, selectedType) {
     fetch(`/movies/findMoviesByLanguageAndType?selectedLanguage=${encodeURIComponent(selectedLanguage)}&selectedType=${encodeURIComponent(selectedType)}`)
         .then(response => {
             if (!response.ok) {
-                throw new Error("Aucun film trouvé ou erreur lors de la récupération.");
+                throw new Error("No movies found or error retrieving data.");
             }
             return response.json();
         })
         .then(data => {
             if (data.length === 0) {
-                document.getElementById("results").textContent = "Aucun film trouvé.";
+                document.getElementById("results").textContent = "No movies found.";
                 return;
             }
 
-            // Grouper les résultats par film (par movie_id)
             const movies = {};
             data.forEach(row => {
-                const movieId = row[0]; // movie_id
+                const movieId = row[0];
                 if (!movies[movieId]) {
                     movies[movieId] = {
                         id: movieId,
@@ -1305,7 +1394,6 @@ function searchMovies(selectedLanguage, selectedType) {
                 }
             });
 
-            // Construire le HTML pour afficher les films et leurs langues
             const resultsHTML = Object.values(movies)
                 .map(movie => {
                     const languageList = movie.languages
@@ -1321,7 +1409,7 @@ function searchMovies(selectedLanguage, selectedType) {
                             <p>Rating: ${movie.rating}</p>
                             <h4>Languages:</h4>
                             <ul>
-                                ${languageList || "<li>Aucune langue trouvée.</li>"}
+                                ${languageList || "<li>No language found.</li>"}
                             </ul>
                         </div>
                     `;
@@ -1332,7 +1420,7 @@ function searchMovies(selectedLanguage, selectedType) {
         })
         .catch(error => {
             console.error("Erreur :", error);
-            document.getElementById("results").textContent = "Erreur lors de la recherche des films.";
+            document.getElementById("results").textContent = "Error while searching for movies.";
         });
 }
 

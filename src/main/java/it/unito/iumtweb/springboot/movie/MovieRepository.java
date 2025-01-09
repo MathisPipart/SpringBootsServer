@@ -104,9 +104,10 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
                     "FROM movie m " +
                     "JOIN genre g ON m.id = g.id " +
                     "JOIN poster p ON m.id = p.id " +
-                    "WHERE m.date = CAST(:date AS INTEGER) " +
+                    "WHERE m.rating IS NOT NULL " +
+                    "AND m.date = CAST(:date AS INTEGER) " +
                     "GROUP BY m.id, m.name, m.date, m.tagline, m.description, m.minute, m.rating, p.link " +
-                    "ORDER BY m.id ASC " +
+                    "ORDER BY m.rating DESC, m.id ASC " +
                     "LIMIT :limit OFFSET :offset")
     List<Map<String, Object>> findMoviesByDate(@Param("date") String date, @Param("limit") int limit, @Param("offset") int offset);
 

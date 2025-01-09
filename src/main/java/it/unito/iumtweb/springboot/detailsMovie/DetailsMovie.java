@@ -366,7 +366,7 @@ public class DetailsMovie {
     public String getCrew() {
         return crew;
     }
-    
+
     /**
      * Sets the crew involved in the movie production.
      *

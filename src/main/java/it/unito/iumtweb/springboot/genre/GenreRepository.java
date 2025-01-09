@@ -15,4 +15,6 @@ public interface GenreRepository extends JpaRepository<Genre, Long> {
     @Query("SELECT a FROM Genre a WHERE LOWER(a.genre) LIKE LOWER(CONCAT('%', :keyword, '%'))")
     List<Genre> findByNameContainingIgnoreCase(String keyword);
 
+    @Query("SELECT DISTINCT g.genre FROM Genre g")
+    List<String> findDistinctGenres();
 }

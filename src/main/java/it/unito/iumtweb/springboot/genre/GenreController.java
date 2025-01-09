@@ -3,10 +3,12 @@ package it.unito.iumtweb.springboot.genre;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/genres")
@@ -33,6 +35,16 @@ public class GenreController {
         List<Genre> genres = genreService.findGenresByKeyword(name);
         if (!genres.isEmpty()) {
             return new ResponseEntity<>(genres, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/distinctGenres")
+    public ResponseEntity<List<String>> getDistinctGenre() {
+        List<String> distinctGenres = genreService.findDistinctGenres();
+        if (!distinctGenres.isEmpty()) {
+            return new ResponseEntity<>(distinctGenres, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

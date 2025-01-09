@@ -189,6 +189,14 @@ public class MovieController {
         return ResponseEntity.ok(results);
     }
 
-
+    @GetMapping("/distinctDates")
+    public ResponseEntity<List<String>> getDistinctDates() {
+        List<String> distinctDates = movieService.findDistinctDates();
+        if (!distinctDates.isEmpty()) {
+            return new ResponseEntity<>(distinctDates, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 
 }

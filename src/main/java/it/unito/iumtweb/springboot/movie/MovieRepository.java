@@ -82,13 +82,15 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
                     "FROM movie m " +
                     "JOIN genre g ON m.id = g.id " +
                     "JOIN poster p ON m.id = p.id " +
-                    "WHERE m.id IN ( " +
+                    "WHERE m.rating IS NOT NULL " +
+                    "AND m.id IN ( " +
                     "   SELECT m2.id " +
                     "   FROM movie m2 " +
                     "   JOIN genre g2 ON m2.id = g2.id " +
                     "   WHERE LOWER(g2.genre) = LOWER(:genreName) " +
                     ") " +
                     "GROUP BY m.id, m.name, m.date, m.tagline, m.description, m.minute, m.rating, p.link " +
+                    "ORDER BY m.rating DESC, m.id ASC " +
                     "LIMIT :limit OFFSET :offset")
     List<Map<String, Object>> findMoviesWithGenresByGenre(@Param("genreName") String genreName, @Param("limit") int limit, @Param("offset") int offset);
 
